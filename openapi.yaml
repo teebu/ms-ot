@@ -1,0 +1,50 @@
+openapi: 3.1.0
+info:
+  title: OneTrust Inventory API
+  description: API to interact with inventory assets in the OneTrust system.
+  version: 1.0.0
+servers:
+  - url: https://uat.onetrust.com
+    description: OneTrust UAT Environment
+paths:
+  /api/inventory/v2/inventories/assets/{assetId}:
+    get:
+      operationId: GetAssetById
+      summary: Retrieve an asset by its ID.
+      description: Fetches the details of a specific asset from the OneTrust inventory using the provided asset ID.
+      parameters:
+        - name: assetId
+          in: path
+          required: true
+          description: The unique identifier of the asset to retrieve.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the asset.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The unique identifier of the asset.
+                  name:
+                    type: string
+                    description: The name of the asset.
+                  type:
+                    type: string
+                    description: The type or category of the asset.
+                  status:
+                    type: string
+                    description: The status of the asset.
+                  metadata:
+                    type: object
+                    description: Additional metadata about the asset.
+        "400":
+          description: Bad request, possibly due to a missing or invalid asset ID.
+        "404":
+          description: Asset not found for the given ID.
+        "500":
+          description: Internal server error.
