@@ -1,0 +1,16 @@
+Descriptor:
+  Name: OneTrust DataMap
+  DisplayName: OneTrust Consent
+  Description: This tool can query the OneTrust Consent and Prefrence Management APIs and return details about them
+  SupportedAuthTypes:
+    - ApiKey
+  Authorization:
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: 'Bearer'
+
+SkillGroups:
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/consent_openapi.yaml

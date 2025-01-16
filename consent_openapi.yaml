@@ -1,0 +1,259 @@
+openapi: 3.0.0
+info:
+  title: OneTrust Consent and Prefrence Management API
+  description: >-
+    API to interact with consent and preference management in the OneTrust system.
+  version: 1.0.0
+servers:
+  - url: https://uat.onetrust.com
+    description: OneTrust UAT Environment
+paths:
+  /api/consentmanager/v2/purposes:
+    get:
+      description: >-
+        Use this API to retrieve a list of Purpose versions. The response will
+        include details for each Purpose version along with the corresponding
+        Purpose ID, created date, and published date.\n> 🗒 Things to Know\n>
+        \n> - This API returns Purpose descriptions inside `<p>` and `</p> `
+        HTML tags. These can be sanitized depending on your formatting needs.\n
+      operationId: getGroupedPurposesUsingGET
+      parameters:
+        - description: >-
+            In order to include retired versions for each Purposes this property
+            should be set to true; default value is false
+          in: query
+          name: includeRetired
+          required: false
+          example: false
+          schema:
+            type: boolean
+            default: false
+        - description: >-
+            In order to retrieve only the latest version of each Purpose this
+            property should be set to true; default value is false
+          in: query
+          name: latestVersion
+          required: false
+          example: false
+          schema:
+            type: boolean
+            default: false
+        - description: >-
+            In order to retrieve custom preference for each version of Purposes
+            this property should be set to true; default value is false
+          in: query
+          name: includeCustomPreferences
+          required: false
+          example: false
+          schema:
+            type: boolean
+            default: false
+        - description: >-
+            In order to retrieve topics for each version of Purposes this
+            property should be set to true; default value is false
+          in: query
+          name: includeTopics
+          required: false
+          example: false
+          schema:
+            type: boolean
+            default: false
+        - description: >-
+            The `status` query parameter filters the highest version of purposes
+            by the status and also `status` query parameter accepts multiple
+            `status` values in url as mentioned in the below example. Possible
+            values of status parameter are- `{ACTIVE|DRAFT|RETIRED}`. Note that
+            the status and organization parameters cannot be used in
+            conjunction.\n\nExample:
+            `v2/purposes?status=ACTIVE&status=DRAFT&status=RETIRED`
+          in: query
+          name: status
+          schema:
+            type: string
+        - description: >-
+            Results page you want to retrieve (0..N) - e.g. 3
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            default: 0
+        - description: >-
+            The number of elements to be returned in a page. (Note: The maximum
+            size value may differ by API and is subject to change. If a number
+            greater than the maximum is requested, the API will return the
+            maximum allowed value.)\n
+          in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            default: 20
+        - description: >-
+            To filter the purposes by the organization their `ACTIVE` version is
+            linked to, set the `organization` request parameter to the
+            corresponding unique identifier.\n\nExample:
+            `v2/purposes?organization=71c11a00-ec91-45d3-b8ed-9199d263ff35`
+          in: query
+          name: organization
+          schema:
+            type: string
+        - description: >-
+            To sort the purposes by their creation date in ascending or
+            descending order, set the `createdDate` query parameter  to `asc` or
+            `desc`.\n\nExample: `v2/purposes?sort=createdDate,desc`
+          in: query
+          name: createdDate
+          schema:
+            type: string
+            format: date
+        - description: >-
+            To sort the purposes by the date when they were last updated in
+            ascending or descending order, set the `lastModifiedDate` query
+            parameter  to `asc` or `desc`.\n\nExample:
+            `v2/purposes?sort=lastModifiedDate,desc`
+          in: query
+          name: lastModifiedDate
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagePurposeVersionsGroupedByGuid'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '429':
+          description: >-
+            Too Many Requests\nFor more information, see [API Rate
+            Limits](https://developer.onetrust.com/onetrust/reference/rate-limits-overview).
+          headers:
+            Retry-After:
+              description: The number of seconds after which requests will be allowed again.
+              schema:
+                type: integer
+                format: int32
+            ot-period:
+              description: The unit of time for which the rate limit applies.
+              schema:
+                type: string
+                enum:
+                  - HOUR
+                  - MINUTE
+            ot-ratelimit-event-id:
+              description: The unique identifier for the rate-limiting event.
+              schema:
+                type: string
+                format: uuid
+            ot-request-made:
+              description: The number of requests made within the specified period.
+              schema:
+                type: integer
+                format: int32
+            ot-requests-allowed:
+              description: The number of requests allowed within the specified period.
+              schema:
+                type: integer
+                format: int32
+      security:
+        - oauth2:
+            - CONSENT
+            - CONSENT_READ
+      summary: Get List of Purpose Versions
+      tags:
+        - Purposes V2
+  /api/consentmanager/v2/purposes/{purposeId}:
+    get:
+      description: >-
+        Use this API to retrieve a single Purpose by its unique identifier along
+        with the associated attributes, Purpose Preferences, and created date.\n>
+        🗒 Things to Know\n> \n> - This API returns Purpose descriptions inside
+        `<p>` and `</p> `HTML tags. These can be sanitized depending on your
+        formatting needs.\n
+      operationId: getPurposeDetailUsingGET
+      parameters:
+        - description: Unique identifier identifying a Purpose
+          in: path
+          name: purposeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: >-
+            The status of the Purpose to be retrieved {ACTIVE|DRAFT} - by default
+            ACTIVE is returned
+          in: query
+          name: status
+          required: false
+          schema:
+            type: string
+        - description: >-
+            Version number of the Purpose to be retrieved - e.g. 2
+          in: query
+          name: version
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurposeDetailDtoV2'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '429':
+          description: >-
+            Too Many Requests\nFor more information, see [API Rate
+            Limits](https://developer.onetrust.com/onetrust/reference/rate-limits-overview).
+          headers:
+            Retry-After:
+              description: The number of seconds after which requests will be allowed again.
+              schema:
+                type: integer
+                format: int32
+            ot-period:
+              description: The unit of time for which the rate limit applies.
+              schema:
+                type: string
+                enum:
+                  - HOUR
+                  - MINUTE
+            ot-ratelimit-event-id:
+              description: The unique identifier for the rate-limiting event.
+              schema:
+                type: string
+                format: uuid
+            ot-request-made:
+              description: The number of requests made within the specified period.
+              schema:
+                type: integer
+                format: int32
+            ot-requests-allowed:
+              description: The number of requests allowed within the specified period.
+              schema:
+                type: integer
+                format: int32
+      security:
+        - oauth2:
+            - CONSENT
+            - CONSENT_READ
+      summary: Get Purpose
+      tags:
+        - Purposes V2
