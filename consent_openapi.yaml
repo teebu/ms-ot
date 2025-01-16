@@ -19,8 +19,8 @@ paths:
       operationId: getGroupedPurposesUsingGET
       parameters:
         - description: >-
-            In order to include retired versions for each Purposes this property
-            should be set to true; default value is false
+            In order to include retired versions for each Purpose, this property
+            should be set to true; default value is false.
           in: query
           name: includeRetired
           required: false
@@ -29,8 +29,8 @@ paths:
             type: boolean
             default: false
         - description: >-
-            In order to retrieve only the latest version of each Purpose this
-            property should be set to true; default value is false
+            In order to retrieve only the latest version of each Purpose, this
+            property should be set to true; default value is false.
           in: query
           name: latestVersion
           required: false
@@ -39,8 +39,8 @@ paths:
             type: boolean
             default: false
         - description: >-
-            In order to retrieve custom preference for each version of Purposes
-            this property should be set to true; default value is false
+            In order to retrieve custom preferences for each version of Purposes,
+            this property should be set to true; default value is false.
           in: query
           name: includeCustomPreferences
           required: false
@@ -49,8 +49,8 @@ paths:
             type: boolean
             default: false
         - description: >-
-            In order to retrieve topics for each version of Purposes this
-            property should be set to true; default value is false
+            In order to retrieve topics for each version of Purposes, this
+            property should be set to true; default value is false.
           in: query
           name: includeTopics
           required: false
@@ -60,18 +60,17 @@ paths:
             default: false
         - description: >-
             The `status` query parameter filters the highest version of purposes
-            by the status and also `status` query parameter accepts multiple
-            `status` values in url as mentioned in the below example. Possible
-            values of status parameter are- `{ACTIVE|DRAFT|RETIRED}`. Note that
-            the status and organization parameters cannot be used in
-            conjunction.\n\nExample:
+            by the status. This parameter accepts multiple `status` values in the
+            URL as mentioned in the below example. Possible values of the `status`
+            parameter are `{ACTIVE|DRAFT|RETIRED}`. Note that the status and
+            organization parameters cannot be used in conjunction.\n\nExample:
             `v2/purposes?status=ACTIVE&status=DRAFT&status=RETIRED`
           in: query
           name: status
           schema:
             type: string
         - description: >-
-            Results page you want to retrieve (0..N) - e.g. 3
+            Results page you want to retrieve (0..N) - e.g., 3.
           in: query
           name: page
           required: false
@@ -104,7 +103,7 @@ paths:
             type: string
         - description: >-
             To sort the purposes by their creation date in ascending or
-            descending order, set the `createdDate` query parameter  to `asc` or
+            descending order, set the `createdDate` query parameter to `asc` or
             `desc`.\n\nExample: `v2/purposes?sort=createdDate,desc`
           in: query
           name: createdDate
@@ -114,12 +113,29 @@ paths:
         - description: >-
             To sort the purposes by the date when they were last updated in
             ascending or descending order, set the `lastModifiedDate` query
-            parameter  to `asc` or `desc`.\n\nExample:
+            parameter to `asc` or `desc`.\n\nExample:
             `v2/purposes?sort=lastModifiedDate,desc`
           in: query
           name: lastModifiedDate
           schema:
             type: string
+        - description: >-
+            The `type` query parameter filters purposes by their type. Possible
+            values are `STANDARD`, `COOKIE`, `IAB`, `MOBILE`, and
+            `NOTIFICATION_OPT_OUT`.\n\nDefault value is `STANDARD`.\n\nExample:
+            `v2/purposes?type=STANDARD`
+          in: query
+          name: type
+          required: false
+          schema:
+            type: string
+            enum:
+              - STANDARD
+              - COOKIE
+              - IAB
+              - MOBILE
+              - NOTIFICATION_OPT_OUT
+            default: STANDARD
       responses:
         '200':
           description: OK
