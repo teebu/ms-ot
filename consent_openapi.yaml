@@ -257,3 +257,137 @@ paths:
       summary: Get Purpose
       tags:
         - Purposes V2
+components:
+  schemas:
+    PurposeDetailDtoV2:
+      type: object
+      title: PurposeDetailDtoV2
+      properties:
+        attributes:
+          type: object
+          description: Custom Purpose Attributes configured in the Attribute Manager under Consent & Preference Management > Setup > Attribute Manager in the OneTrust application. If values are populated for the attribute they will be displayed in this field.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        consentLifeSpan:
+          type: integer
+          format: int64
+          description: The lifespan of consents recorded against this purpose version in seconds
+          example: 7889238
+        createdBy:
+          type: string
+          format: uuid
+          description: Id of the user who created the Purpose
+          example: d452ec68-71c4-4935-9f17-5fd054365805
+        createdDate:
+          type: string
+          format: date-time
+          description: Created Date of the Purpose Version
+          example: 2019-12-30T10:52:30.974Z
+        customPreferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeCustomPreferenceDtoV2'
+        description:
+          type: string
+          description: Description of the Purpose version
+          example: Collect customer emails for marketing purposes
+        detail:
+          type: string
+          description: URL to get the details of the Purpose Version
+          example: https://app-eu.onetrust.com/api/consentmanager/v2/purposes/f2229953-b4b5-4042-8cb9-b78038cc4c46?version=2
+        id:
+          type: string
+          format: uuid
+          description: Unique Identifier of the Purpose
+          example: f2229953-b4b5-4042-8cb9-b78038cc4c46
+        label:
+          type: string
+          description: Name of the purpose version
+          example: Marketing Communications
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeLanguageDtoV2'
+        lastModifiedBy:
+          type: string
+          format: uuid
+          description: Id of the user who last modified the Purpose
+          example: d452ec68-71c4-4935-9f17-5fd054365805
+        lastModifiedDate:
+          type: string
+          format: date-time
+          description: Last Modified Date of the purpose Version
+          example: 2019-12-30T10:54:30.974Z
+        parentPurposeId:
+          type: string
+          format: uuid
+          description: Parent purpose guid
+          example: ba54eb25-90f0-4633-ab12-c7bf5afdd856
+        purposeType:
+          type: string
+          description: Type of the purpose
+          enum:
+            - STANDARD
+            - COOKIE
+            - IAB
+            - MOBILE
+            - NOTIFICATION_OPT_OUT
+          example: STANDARD
+        retireOnDate:
+          type: string
+          format: date-time
+          description: Retirement Date of the Purpose
+          example: 2021-05-30T10:52:30.974Z
+        status:
+          type: string
+          description: Status of the purpose version
+          enum:
+            - DRAFT
+            - ACTIVE
+            - RETIRED
+          example: ACTIVE
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeTopicDtoV2'
+        version:
+          type: integer
+          format: int64
+          description: Version of the purpose
+          example: 2
+
+    PagePurposeVersionsGroupedByGuid:
+      type: object
+      title: PagePurposeVersionsGroupedByGuid
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeVersionsGroupedByGuid'
+        empty:
+          type: boolean
+        first:
+          type: boolean
+        last:
+          type: boolean
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        size:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
