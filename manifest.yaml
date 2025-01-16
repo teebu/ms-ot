@@ -1,6 +1,6 @@
 Descriptor:
-  Name: datamap
-  DisplayName: datamap
+  Name: OneTrust DataMap
+  DisplayName: OneTrust DataMap
   Description: This tool can query the onetrust inventory and return details about specific assets by GUID
   SupportedAuthTypes:
     - ApiKey
@@ -8,7 +8,7 @@ Descriptor:
     Type: APIKey
     Key: Authorization
     Location: Header
-    AuthScheme: ''
+    AuthScheme: 'Bearer'
 
 SkillGroups:
   - Format: API
