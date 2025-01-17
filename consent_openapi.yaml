@@ -122,8 +122,9 @@ paths:
         - description: >-
             The `type` query parameter filters purposes by their type. Possible
             values are `STANDARD`, `COOKIE`, `IAB`, `MOBILE`, and
-            `NOTIFICATION_OPT_OUT`.\n\nDefault value is `STANDARD`.\n\nExample:
-            `v2/purposes?type=STANDARD`
+            `NOTIFICATION_OPT_OUT`. This parameter accepts multiple `status` values in the
+            URL as mentioned in the below example.\n\nDefault value is `STANDARD`.\n\nExample:
+            `v2/purposes?type=STANDARD&type=COOKIE`
           in: query
           name: type
           required: false
