@@ -374,7 +374,90 @@ components:
           format: int64
           description: Version of the purpose
           example: 2
-
+    PurposeCustomPreferenceDtoV2:
+      properties:
+        customPreferenceOptions:
+          items:
+            $ref: "#/components/schemas/CustomPreferenceOptionDtoV2"
+          type: array
+        displayAs:
+          description: The display type of the Custom Preference
+          enum:
+            - BUTTONS
+            - CHECKBOXES
+          example: BUTTONS
+          type: string
+        id:
+          description: Unique identifier of the Purpose and Custom Preference relation
+          example: c4a57a38-3774-45ad-9fa4-dbc545542232
+          type: string
+        languages:
+          items:
+            $ref: "#/components/schemas/CustomPreferenceLanguageDtoV2"
+          type: array
+        name:
+          description: The Custom Preference name
+          example: Email Frequency
+          type: string
+      title: PurposeCustomPreferenceDtoV2
+      type: object
+    PurposeLanguageDtoV2:
+      properties:
+        default:
+          description: Whether this language is the default one for the Purpose
+          example: true
+          type: boolean
+        description:
+          description: The Purpose description
+          example: Collect customer emails for marketing purposes
+          type: string
+        language:
+          description: The Purpose content language code
+          example: en-us
+          type: string
+        name:
+          description: The Purpose name
+          example: Marketing Communications
+          type: string
+      title: PurposeLanguageDtoV2
+      type: object
+    CustomPreferenceOptionDtoV2:
+      properties:
+        id:
+          description: Unique identifier identifying an Option
+          example: ca0fc41b-b28a-4335-804c-44d1f0f782ed
+          type: string
+        label:
+          description: The Option label
+          example: Weekly
+          type: string
+      title: CustomPreferenceOptionDtoV2
+      type: object
+    CustomPreferenceLanguageDtoV2:
+      properties:
+        default:
+          description: Whether this language is the default one for the Custom Preference
+          example: true
+          type: boolean
+        description:
+          description: The description of the Custom Preference
+          example: Options for different frequencies to receive emails
+          type: string
+        language:
+          description: The Custom Preference content language code
+          example: en-us
+          type: string
+        name:
+          description: The name identifying the Custom Preference
+          example: Email Frequency
+          type: string
+        options:
+          description: Options associated with a Custom Preference
+          items:
+            $ref: "#/components/schemas/CustomPreferenceOptionDtoV2"
+          type: array
+      title: CustomPreferenceLanguageDtoV2
+      type: object
     PagePurposeVersionsGroupedByGuid:
       type: object
       title: PagePurposeVersionsGroupedByGuid
@@ -408,3 +491,203 @@ components:
         totalPages:
           type: integer
           format: int32
+    Sort:
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+      title: Sort
+      type: object
+    Pageable:
+      properties:
+        offset:
+          format: int64
+          type: integer
+        pageNumber:
+          format: int32
+          type: integer
+        pageSize:
+          format: int32
+          type: integer
+        paged:
+          type: boolean
+        sort:
+          $ref: "#/components/schemas/Sort"
+        unpaged:
+          type: boolean
+      title: Pageable
+      type: object
+    PurposeVersionsGroupedByGuid:
+      properties:
+        attributes:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Custom Purpose Attributes configured in the Attribute Manager under Consent & Preference Management > Setup > Attribute Manager in the OneTrust application. If values are populated for the attribute they will be displayed in this field.
+          type: object
+        createdDate:
+          description: Created Date of the Purpose
+          example: 2019-12-30T10:52:30.974Z
+          format: date-time
+          type: string
+        lastModifiedDate:
+          description: Date when this purpose last got updated
+          example: 2021-01-21T16:40:55.723Z
+          format: date-time
+          type: string
+        publishedBy:
+          description: Id of the user who last published the Purpose
+          example: f2229953-b4b5-4042-8cb9-b78038cc4c46
+          format: uuid
+          type: string
+        publishedDate:
+          description: Published Date of the Purpose
+          example: 2019-12-30T10:53:30.974Z
+          format: date-time
+          type: string
+        purposeId:
+          description: Unique Identifier of the Purpose
+          example: f2229953-b4b5-4042-8cb9-b78038cc4c46
+          format: uuid
+          type: string
+        retireOnDate:
+          description: Retirement Date of the Purpose
+          example: 2021-05-30T10:52:30.974Z
+          format: date-time
+          type: string
+        versions:
+          description: Versions of the Purpose
+          items:
+            properties:
+              consentLifeSpan:
+                description: The lifespan of consents recorded against this purpose version in seconds
+                example: 7889238
+                format: int64
+                type: integer
+              createdBy:
+                description: Id of the user who created the Purpose Version
+                example: d452ec68-71c4-4935-9f17-5fd054365805
+                format: uuid
+                type: string
+              createdDate:
+                description: Created Date of the Purpose Version
+                example: 2019-12-30T10:52:30.974Z
+                format: date-time
+                type: string
+              customPreferences:
+                items:
+                  $ref: "#/components/schemas/PurposeCustomPreferenceDtoV2"
+                type: array
+              description:
+                description: Description of the Purpose version
+                example: Collect customer emails for marketing purposes
+                type: string
+              detail:
+                description: URL to get the details of the Purpose Version
+                example: https://app-eu.onetrust.com/api/consentmanager/v2/purposes/f2229953-b4b5-4042-8cb9-b78038cc4c46?version=2
+                type: string
+              label:
+                description: Name of the Purpose version
+                example: Marketing Communications
+                type: string
+              lastModifiedBy:
+                description: Id of the user who last modified the Purpose Version
+                example: 304F7D36-75A2-4967-81A5-5A7D604C6A19
+                format: uuid
+                type: string
+              lastModifiedDate:
+                description: Last Modified Date of the Purpose Version
+                example: 2019-12-30T10:54:30.974Z
+                format: date-time
+                type: string
+              organizations:
+                description: A list of unique identifiers of the organizations an active purpose version is linked to
+                items:
+                  description: The unique identifier of the organization
+                  format: uuid
+                  type: string
+                type: array
+              publishedBy:
+                description: Id of the user who last published the Purpose Version
+                example: 304F7D36-75A2-4967-81A5-5A7D604C6A19
+                format: uuid
+                type: string
+              publishedDate:
+                description: Last Published Date of the Purpose Version
+                example: 2019-12-30T10:54:30.974Z
+                format: date-time
+                type: string
+              purposeType:
+                description: Type of the Purpose
+                enum:
+                  - STANDARD
+                  - COOKIE
+                  - IAB
+                  - MOBILE
+                  - NOTIFICATION_OPT_OUT
+                example: STANDARD
+                type: string
+              status:
+                description: Status of the Purpose version
+                enum:
+                  - DRAFT
+                  - ACTIVE
+                  - RETIRED
+                example: ACTIVE
+                type: string
+              topics:
+                items:
+                  $ref: "#/components/schemas/PurposeTopicDtoV2"
+                type: array
+              version:
+                description: Version of the Purpose
+                example: 2
+                format: int64
+                type: integer
+            title: PurposeDtoV2
+            type: object
+          type: array
+      title: PurposeVersionsGroupedByGuid
+      type: object
+    PurposeTopicDtoV2:
+      properties:
+        id:
+          description: The unique identifier of the Purpose and Topic relation
+          example: 497c4383-2c61-4906-aed0-660e3fd03ef0
+          format: uuid
+          type: string
+        integrationKey:
+          description: The Topic integration key (combination of Purpose and Topic names)
+          example: Marketing-Communications_Car-Marketing
+          type: string
+        languages:
+          description: List of languages for a Topic
+          items:
+            $ref: "#/components/schemas/TopicLanguageDtoV2"
+          type: array
+        name:
+          description: The Topic name
+          example: Car Marketing
+          type: string
+      title: PurposeTopicDtoV2
+      type: object
+    TopicLanguageDtoV2:
+      properties:
+        default:
+          description: Whether this language is the default one for the Topic
+          example: true
+          type: boolean
+        language:
+          description: The Topic content language code
+          example: en-us
+          type: string
+        name:
+          description: The Topic name
+          example: Car Marketing
+          type: string
+      title: TopicLanguageDtoV2
+      type: object

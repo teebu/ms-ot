@@ -16,7 +16,8 @@ What are my active purposes for processing data for cookie type?
 using onetrust consent, give me details about 39d0c533-a82b-4bcc-81c6-991057cef639 purpose
   -> returns details about that specific purpose
 
-promptbook for consent purpose details:
-input -> consent name 
+promptbook for single consent purpose details (uses list and grabs id from results) :
+input -> consent name of active purpose within the page limit ("Email Marketing")
 
 what are the data elements that are approved for that purpose?
+todo: what api is this?
