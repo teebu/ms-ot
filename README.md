@@ -21,3 +21,8 @@ input -> consent name of active purpose within the page limit ("Email Marketing"
 
 what are the data elements that are approved for that purpose?
 todo: what api is this?
+
+
+### notes
+enable Agents and AgentView flags:
+https://securitycopilot.microsoft.com/?featureFlags=Agents,AgentView
