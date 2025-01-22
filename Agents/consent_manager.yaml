@@ -1,0 +1,23 @@
+Descriptor:
+  Name: ConsentManager
+  DisplayName: Consent Manager
+  Description: Assists with managing other managers and retrieving consent-related information, including user consents, permissions, and application access in OneTrust.
+SkillGroups:
+  # Agents are just another type of skill
+  - Format: Agent
+    Skills:
+      - Name: OTConsentAgent
+        DisplayName: OneTrust Consent Tool
+        Description: Retrieves and manages consent-related data, such as user permissions, application consents, and access reviews in Microsoft Entra.
+        Inputs:
+          - Name: Request
+            Description: Describe the consent-related information or actions you need, such as checking permissions or managing consents.
+            Required: true
+        Settings:
+          Instructions: |
+            You are an AI agent designed to help manage consent-related tasks.
+            Use the tools available to you to find details about user consents, application permissions, and related configurations.
+            Respond with accurate and concise information based on the request.
+        ChildSkills:
+          - getGroupedPurposesUsingGET
+          - getPurposeDetailUsingGET

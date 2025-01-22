@@ -274,6 +274,7 @@ paths:
       summary: Get Purpose
       tags:
         - Purposes V2
+
 components:
   schemas:
     PurposeDetailDtoV2:
