@@ -1,13 +1,13 @@
 Descriptor:
   Name: OneTrustSuperManager
   DisplayName: OneTrust Super Manager
-  Description: Managing other managers in OneTrust.
+  Description: Manages and coordinates other specialized agents in OneTrust, including consent and librarian managers.
 SkillGroups:
   # Agents are just another type of skill
   - Format: Agent
     Skills:
       - Name: ConsentManagerAgent
-        DisplayName: OneTrust Consent Manager
+        DisplayName: OneTrust Consent Manager Agent
         Description: Retrieves and manages consent-related data, such as user permissions, application consents, and access reviews in Microsoft Entra.
         Inputs:
           - Name: Request
@@ -20,3 +20,17 @@ SkillGroups:
             Respond with accurate and concise information based on the request.
         ChildSkills:
           - OTConsentAgent
+      - Name: LibrarianManagerAgent
+        DisplayName: OneTrust Librarian Manager Agent
+        Description: Gathers, organizes, and manages data related to documents, records, and resources in OneTrust.
+        Inputs:
+          - Name: Request
+            Description: Provide a description of the document or record-related information you want to retrieve or manage.
+            Required: true
+        Settings:
+          Instructions: |
+            You are an AI agent specialized in managing documents, records, and knowledge resources.
+            Use the tools available to gather and organize data effectively, ensuring users get accurate and organized information about the requested resources.
+        ChildSkills:
+          - OTDocumentRetrievalAgent
+          - OTRecordManagerToolAgent
