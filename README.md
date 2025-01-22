@@ -26,3 +26,7 @@ todo: what api is this?
 ### notes
 enable Agents and AgentView flags:
 https://securitycopilot.microsoft.com/?featureFlags=Agents,AgentView
+
+
+
+![](diagram.png)
