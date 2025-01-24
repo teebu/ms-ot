@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Webhook Test API
+  description: API for sending queries to a webhook.
+  version: 1.0.0
+servers:
+  - url: https://webhook-test.com
+paths:
+  /fdbf9622b249e16510c19a74528abf57:
+    post:
+      summary: Send a query to the webhook
+      description: Sends a JSON payload containing a query to the webhook endpoint.
+      operationId: sendQuery
+      requestBody:
+        description: JSON object containing the query.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The query string to send.
+              required:
+                - query
+              example:
+                query: "hello there"
+      responses:
+        '200':
+          description: Successful response from the webhook.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Response message from the webhook.
+                example:
+                  message: "Query received successfully."
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Invalid input."
+        '500':
+          description: Webhook server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Internal server error."

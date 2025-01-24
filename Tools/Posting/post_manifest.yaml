@@ -1,0 +1,9 @@
+Descriptor:
+  Name: OTConsentTool
+  DisplayName: OneTrust Consent Tool
+  Description: This tool can query the OneTrust Consent and Prefrence Management APIs and return details about them
+
+SkillGroups:
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Posting/post_openapi.yaml
