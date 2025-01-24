@@ -1,7 +1,7 @@
 Descriptor:
-  Name: OTConsentTool
-  DisplayName: OneTrust Consent Tool
-  Description: This tool can query the OneTrust Consent and Prefrence Management APIs and return details about them
+  Name: PostTool
+  DisplayName: Post Tool
+  Description: This tool can send request query using post to a webhook
 
 SkillGroups:
   - Format: API
