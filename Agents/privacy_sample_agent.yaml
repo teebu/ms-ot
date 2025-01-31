@@ -1,0 +1,18 @@
+Descriptor:
+  Name: PrivacySampleGenerator
+  DisplayName: Privacy Sample Generator
+  Description: This agent generates a privacy payload in json and sends the relavent alerts to OneTrust
+
+SkillGroups:
+  # Agents are just another type of skill
+  - Format: Agent
+    Skills:
+      - Name: OTSendPrivacyPayloadToOneTrust
+        DisplayName: Send Privacy Payload to OneTrust
+        Description: Generates a privacy payload and sends the json pay load to integration manager
+        Settings:
+          Instructions: |
+            Generate a privacy payload as json and then send detected PII data to OneTrust
+        ChildSkills:
+          - GeneratePrivacyPayload
+          - SendPIIDataDetected

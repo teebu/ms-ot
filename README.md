@@ -42,3 +42,56 @@ https://securitycopilot.microsoft.com/?featureFlags=Agents,AgentView
 
 # outline
 ![](diagram.png)
+
+```json
+{
+  "IT_OWNER": "joe@example.app",
+  "SourceName": "AzureSqlDatabase-UjS",
+  "SourceType": "AzureSqlDatabase",
+  "SourceRegion": "northeurope",
+  "AssetName": "new_customerdata",
+  "AssetType": "Table",
+  "AssetPath": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+  "Classification": [
+   "MICROSOFT.GOVERNMENT.US.STATE",
+   "MICROSOFT.PERSONAL.NAME",
+   "MICROSOFT.PERSONAL.US.PHONE_NUMBER",
+   "U.S. Social Security Number (SSN)"
+  ],
+  "Classificationdetails": [
+   {
+     "Id": "ee6e068c-0b84-2813-2cb3-24c189b90be2",
+     "Name": "MICROSOFT.GOVERNMENT.US.STATE",
+     "Confidence": 90,
+     "Count": 1,
+     "UniqueCount": 1
+   },
+   {
+     "Id": "50b8b56b-4ef8-44c2-a924-03374f5831ce",
+     "Name": "MICROSOFT.PERSONAL.NAME",
+     "Confidence": 85,
+     "Count": 1,
+     "UniqueCount": 1
+   },
+   {
+     "Id": "46b001f5-a4ce-0497-8177-7b13916bb6fa",
+     "Name": "MICROSOFT.PERSONAL.US.PHONE_NUMBER",
+     "Confidence": 86,
+     "Count": 1,
+     "UniqueCount": 1
+   },
+   {
+     "Id": "a44669fe-0d48-453d-a9b1-2cc83f2cba77",
+     "Name": "U.S. Social Security Number (SSN)",
+     "Confidence": 88,
+     "Count": 108,
+     "UniqueCount": 108
+   }
+  ]
+}
+```
+
+
+---
+to kick off flow of generated pii detected find the agent:
+@ Send Privacy Payload to OneTrust 

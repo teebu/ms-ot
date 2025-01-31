@@ -1,0 +1,20 @@
+Descriptor:
+  Name: LogicApps
+  DisplayName: Simple Logic App Skillset to handle payloads
+  Description: Send Data detected in Azure SQL
+
+SkillGroups:
+  - Format: LogicApp
+    Skills:
+      - Name: SendPIIDataDetected
+        DisplayName: Send PII Data detected
+        Description: This will trigger a LogicApps workflow to reach out to user for additional context
+        Inputs:
+          - Name: payload
+            Description: Payload of the event
+            Required: true
+        Settings:
+          SubscriptionId: fe58bd80-22c8-4444-908e-b75e23bf95fb
+          ResourceGroup: TestingHTTPPayload_group
+          WorkflowName: TestingHTTPPayload
+          TriggerName: manual
