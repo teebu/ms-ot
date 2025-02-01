@@ -11,16 +11,92 @@
             "type": "object",
             "properties": {
               "payload": {
-                "type": "string"
+                "type": "object"
               }
-            }
+            },
+            "required": [
+              "payload"
+            ]
           }
         }
       }
     },
     "actions": {
-      "HTTP": {
+      "Parse_JSON": {
         "runAfter": {},
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@triggerBody()?['payload']",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "IT_OWNER": {
+                "type": "string"
+              },
+              "SourceName": {
+                "type": "string"
+              },
+              "SourceType": {
+                "type": "string"
+              },
+              "SourceRegion": {
+                "type": "string"
+              },
+              "AssetName": {
+                "type": "string"
+              },
+              "AssetType": {
+                "type": "string"
+              },
+              "AssetPath": {
+                "type": "string"
+              },
+              "Classification": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Classificationdetails": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string"
+                    },
+                    "Name": {
+                      "type": "string"
+                    },
+                    "Confidence": {
+                      "type": "integer"
+                    },
+                    "Count": {
+                      "type": "integer"
+                    },
+                    "UniqueCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "Id",
+                    "Name",
+                    "Confidence",
+                    "Count",
+                    "UniqueCount"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "HTTP": {
+        "runAfter": {
+          "Parse_JSON": [
+            "Succeeded"
+          ]
+        },
         "type": "Http",
         "inputs": {
           "uri": "https://uat.onetrust.com/integrationmanager/api/v1/webhook/5c22522a-95a9-4d0e-bd3d-341b834f44a7",
@@ -29,7 +105,7 @@
             "Content-Type": "application/json",
             "Authorization": "Bearer ..."
           },
-          "body": "@triggerBody()?['payload']"
+          "body": "@string(body('Parse_JSON'))"
         },
         "runtimeConfiguration": {
           "contentTransfer": {
