@@ -66,7 +66,9 @@ paths:
   /e96a023e303e91eeac7182b8e5badca5:
     post:
       summary: Send a PII Data Alert payload to the webhook tester
-      description: Sends a JSON payload containing a stringified json with PII Data Alert payload to the webhook tester endpoint.
+      description: |
+        Sends a JSON payload containing a stringified json with PII Data Alert payload to the webhook tester endpoint.
+        The stringified json should not have quotes encoded. For example: \" with \u0022, keep them as \". Fix the payload if neccecery.
       operationId: SendPIIDataDetectedOTWebhookTester
       requestBody:
         description: JSON object containing the query.
