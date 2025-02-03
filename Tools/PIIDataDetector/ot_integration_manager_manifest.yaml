@@ -13,4 +13,4 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/integration_manager_openapi.yaml
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/ot_integration_manager_openapi.yaml

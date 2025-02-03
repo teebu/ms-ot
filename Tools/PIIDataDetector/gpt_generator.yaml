@@ -59,3 +59,18 @@ SkillGroups:
                   }
               ]
             }
+
+  - Format: GPT
+    Skills:
+      - Name: EnrichPrivacyPayloadWithOwnerID
+        DisplayName: Enrich Privacy Payload With Owner ID
+        Description: Enrich privacy payload given a json payload with additional information if needed
+        Settings:
+          ModelName: gpt-4o
+          Template: |-
+            Enhance the given JSON payload by adding an IT_OWNER_ID field based on the IT_OWNER email. Use the following mapping:
+
+            joe@example.com → 123
+            foo@bar.com → 999
+            All other emails → 1
+            Ensure the updated JSON retains its original structure while only appending the IT_OWNER_ID field. Return the modified JSON.
