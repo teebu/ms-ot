@@ -15,7 +15,7 @@ SkillGroups:
             Generate a privacy payload and enrich it. Then send the detected PII Data json payload to the integration manager webhook.
         ChildSkills:
           - GeneratePrivacyPayload
-          - EnrichPrivacyPayloadWithOwnerID
-          - SendPIIDataDetected
-          - SendPIIDataDetectedOTWebhookTester
           - SendPIIDataDetectedOTIntegrationManagerWebhook
+          - EnrichPrivacyPayloadWithOwnerID
+          #- SendPIIDataDetected # logic app
+          #- SendPIIDataDetectedOTWebhookTester

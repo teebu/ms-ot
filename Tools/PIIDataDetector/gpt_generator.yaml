@@ -72,7 +72,7 @@ SkillGroups:
         Settings:
           ModelName: gpt-4o
           Template: |-
-            Enhance the given JSON payload by adding an IT_OWNER_ID field based on the IT_OWNER email. Use the following mapping:
+            Parse and enrich the given JSON payload by adding an IT_OWNER_ID field based on the IT_OWNER email. Use the following mapping:
 
             joe@example.com → 123
             foo@bar.com → 999
