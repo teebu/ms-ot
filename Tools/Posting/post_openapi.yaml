@@ -68,7 +68,6 @@ paths:
       summary: Send a PII Data Alert payload to the webhook tester
       description: |
         Sends a JSON payload containing a stringified json with PII Data Alert payload to the webhook tester endpoint.
-        Fix the payload string and replace encoded characters with escaped characters: Example: \u0022Hello\u0022 will be with \"Hello\".
       operationId: SendPIIDataDetectedOTWebhookTester
       requestBody:
         description: JSON object containing the query.

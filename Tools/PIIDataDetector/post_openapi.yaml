@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Onetrust Webhook API
+  description: API for sending queries to a webhook.
+  version: 1.0.0
+servers:
+  - url: https://uat.onetrust.com
+    description: OneTrust UAT Environment
+paths:
+  /integrationmanager/api/v1/webhook/954988c6-177d-4754-a71c-66d4fd06d7d9:
+    post:
+      summary: Send a PII Data Alert payload to the integration manager webhook
+      description: |
+        Sends a JSON payload containing a stringified json with PII Data Alert payload to the webhook endpoint.
+      operationId: SendPIIDataDetectedOTWebhook
+      requestBody:
+        description: JSON object containing the query.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+                  description: The stringified json payload to send.
+              required:
+                - payload
+              example:
+                payload: "{\"email\": \"joe@example.com\"}"
+      responses:
+        '200':
+          description: Successful response from the webhook.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Response message from the webhook.
+                example:
+                  message: "Query received successfully."
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Invalid input."
+        '500':
+          description: Webhook server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Internal server error."
