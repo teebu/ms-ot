@@ -17,3 +17,4 @@ SkillGroups:
           - GeneratePrivacyPayload
           - SendPIIDataDetected
           - SendPIIDataDetectedOTWebhookTester
+          - SendPIIDataDetectedOTIntegrationManagerWebhook
