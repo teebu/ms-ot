@@ -1,6 +1,6 @@
 Descriptor:
-  Name: OTPostPIITool
-  DisplayName: OneTrust Post PII Alert Tool
+  Name: OTIntegrationManagerTool
+  DisplayName: OneTrust Integration Manager Tool
   Description: This tool can send request payload using post to a OneTrust webhook
   SupportedAuthTypes:
     - ApiKey
@@ -13,4 +13,4 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/post_pii_webhook.yaml
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/integration_manager_openapi.yaml

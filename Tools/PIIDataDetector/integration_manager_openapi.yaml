@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Onetrust Webhook API
-  description: API for sending queries to a webhook.
+  title: Onetrust Integration Manager API
+  description: API for sending queries to Integration Manager API
   version: 1.0.0
 servers:
   - url: https://uat.onetrust.com
@@ -11,7 +11,7 @@ paths:
     post:
       summary: Send a PII Data Alert payload to the integration manager webhook
       description: |
-        Sends a JSON payload containing a stringified json with PII Data Alert payload to the webhook endpoint.
+        Sends a JSON payload containing a stringified json with PII Data Alert payload to the Integration Manager webhook endpoint.
       operationId: SendPIIDataDetectedOTWebhook
       requestBody:
         description: JSON object containing the query.
