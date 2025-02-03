@@ -1,7 +1,7 @@
 Descriptor:
   Name: OTIntegrationManagerTool
   DisplayName: OneTrust Integration Manager Tool
-  Description: This tool can send request payload using post to a OneTrust webhook
+  Description: This tool can send request payload using post to OneTrust Integration Manager webhook
   SupportedAuthTypes:
     - ApiKey
   Authorization:
