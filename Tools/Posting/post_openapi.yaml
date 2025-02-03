@@ -63,3 +63,60 @@ paths:
                     description: Error message.
                 example:
                   error: "Internal server error."
+  /e96a023e303e91eeac7182b8e5badca5:
+    post:
+      summary: Send a PII Data Alert payload to the webhook tester
+      description: Sends a JSON payload containing a PII Data Alert payload to the webhook tester endpoint.
+      operationId: SendPIIDataDetectedOTWebhookTester
+      requestBody:
+        description: JSON object containing the query.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The payload string to send.
+              required:
+                - payload
+              example:
+                payload: "{\"IT_OWNER\": \"jdoe@1trust.app\"}"
+      responses:
+        '200':
+          description: Successful response from the webhook.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Response message from the webhook.
+                example:
+                  message: "Query received successfully."
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Invalid input."
+        '500':
+          description: Webhook server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Internal server error."

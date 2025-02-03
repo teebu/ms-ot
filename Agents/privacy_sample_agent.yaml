@@ -9,10 +9,11 @@ SkillGroups:
     Skills:
       - Name: OTSendPrivacyPayloadToOneTrust
         DisplayName: Send Privacy Payload to OneTrust
-        Description: Generates a privacy payload and sends the json pay load to integration manager
+        Description: Generates a privacy payload and sends the json payload to integration manager
         Settings:
           Instructions: |
-            Generate a privacy payload as json and then send detected PII data to OneTrust
+            Generate a privacy payload as json and then send detected PII Data payload to the webhook tester endpoint
         ChildSkills:
           - GeneratePrivacyPayload
           - SendPIIDataDetected
+          - SendPIIDataDetectedOTWebhookTester
