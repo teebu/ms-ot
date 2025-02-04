@@ -1,7 +1,7 @@
 Descriptor:
-  Name: OneTrust Privacy Generator
-  DisplayName: OneTrust Privacy Generator
-  Description: One Trust is used to process privacy requests and manage privacy data
+  Name: OneTrust GPT Sample Privacy Generator
+  DisplayName: OneTrust GPT Sample Privacy Generator
+  Description: OneTrust is used to process privacy requests and manage privacy data
 
 SkillGroups:
   # Agents are just another type of skill

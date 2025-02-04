@@ -1,6 +1,6 @@
 Descriptor:
-  Name: PrivacySampleGenerator
-  DisplayName: Privacy Sample Generator
+  Name: OTPrivacySampleGeneratorSubmitter
+  DisplayName: OneTrust Privacy Sample Generator and Submitter
   Description: This agent generates a privacy payload in json and sends the relavent alerts to OneTrust
 
 SkillGroups:
