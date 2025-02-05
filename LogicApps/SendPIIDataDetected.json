@@ -11,7 +11,7 @@
             "type": "object",
             "properties": {
               "payload": {
-                "type": "object"
+                "type": "string"
               }
             },
             "required": [
@@ -103,7 +103,7 @@
           "method": "POST",
           "headers": {
             "Content-Type": "application/json",
-            "Authorization": "Bearer ..."
+            "Authorization": "Bearer ...="
           },
           "body": "@string(body('Parse_JSON'))"
         },
