@@ -2,10 +2,7 @@ Descriptor:
   Name: Search Purview
   Description: use this plugin to search Purview for an asset by keywords or fqn
   SupportedAuthTypes:
-    - AAD
-  Authorization:
-    Type: AAD
-    EntraScopes: https://purview.azure.net/.default
+    - OAuthClientCredentialsFlow
 
 SkillGroups:
   - Format: API
