@@ -19,6 +19,6 @@ SkillGroups:
         ChildSkills:
           - DetectNewAssetswithPII
           #- EnrichPrivacyPayloadWithOwnerID
-          - OTIntegrationManagerTool # OT website
+          - SendPIIDataDetectedToIntegrationManagerWebhook # OT website
           #- SendPIIDataDetected # logic app
           #- SendPIIDataDetectedOTWebhookTester
