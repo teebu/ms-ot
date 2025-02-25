@@ -12,7 +12,7 @@ paths:
       summary: Send a PII Data Alert payload to the OneTrust Integration Manager webhook
       description: |
         Sends a JSON payload containing a stringified json with PII Data Alert payload to the Integration Manager webhook endpoint.
-      operationId: SendPIIDataDetectedOTIntegrationManagerWebhook
+      operationId: SendPIIDataDetectedToIntegrationManagerWebhook
       requestBody:
         description: JSON object containing the query.
         required: true
