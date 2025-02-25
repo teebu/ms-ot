@@ -3,6 +3,11 @@ Descriptor:
   Description: use this plugin to search Purview for an asset by keywords or fqn
   SupportedAuthTypes:
     - OAuthClientCredentialsFlow
+  Authorization:
+    Type: OAuthClientCredentialsFlow
+    TokenEndpoint: https://login.microsoftonline.com/714a1b55-6ae7-46e7-aa08-8978b2c8746c/oauth2/token
+    Scopes: Read
+    AuthorizationContentType: application/x-www-form-urlencoded
 
 SkillGroups:
   - Format: API

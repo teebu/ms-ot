@@ -14,7 +14,7 @@ SkillGroups:
             Description: Payload of the event
             Required: true
         Settings:
-          SubscriptionId: fe58bd80-22c8-4444-908e-b75e23bf95fb
-          ResourceGroup: TestingHTTPPayload_group
-          WorkflowName: TestingHTTPPayload
+          SubscriptionId: 8a081f00-1372-4400-9886-a704be213b86
+          ResourceGroup: bond
+          WorkflowName: SendToOT
           TriggerName: manual

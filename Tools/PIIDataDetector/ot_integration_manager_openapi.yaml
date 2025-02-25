@@ -9,7 +9,7 @@ servers:
 paths:
   /integrationmanager/api/v1/webhook/954988c6-177d-4754-a71c-66d4fd06d7d9:
     post:
-      summary: Send a PII Data Alert payload to the integration manager webhook
+      summary: Send a PII Data Alert payload to the OneTrust Integration Manager webhook
       description: |
         Sends a JSON payload containing a stringified json with PII Data Alert payload to the Integration Manager webhook endpoint.
       operationId: SendPIIDataDetectedOTIntegrationManagerWebhook

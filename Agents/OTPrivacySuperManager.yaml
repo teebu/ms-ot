@@ -1,0 +1,24 @@
+Descriptor:
+  Name: OneTrust Privacy Super Manager
+  DisplayName: OneTrust Privacy Super Manager
+  Description: This agent gathers data and converts the payload in json and sends the relavent alerts to OneTrust
+
+SkillGroups:
+  # Agents are just another type of skill
+  - Format: Agent
+    Skills:
+      - Name: OTDetectAssetsWithPII
+        DisplayName: Detect New and Existing Assets with PII
+        Description: Queries log analytics and detects new or existing assets with PII and sends the json payload to OneTrust Integration Manager webhook
+        Settings:
+          Instructions: |
+            Detect new assets pii.
+            The result must be a json object and is sent to OneTrust.
+            If the result is an array each array object of the result is sent to OneTrust.
+            If the Classification and ClassificationDetails fields are stingified jsons, json parse them.
+        ChildSkills:
+          - DetectNewAssetswithPII
+          #- EnrichPrivacyPayloadWithOwnerID
+          - SendPIIDataDetectedOTIntegrationManagerWebhook # OT website
+          - SendPIIDataDetected # logic app
+          #- SendPIIDataDetectedOTWebhookTester
