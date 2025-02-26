@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: OneTrust Integration Manager API
+  description: API to interact with OneTrust Integration Manager Webhook
+  version: 1.0.0
+servers:
+  - url: https://uat.onetrust.com
+paths:
+  /integrationmanager/api/v1/webhook/f10eb14d-9545-4645-9de7-1f3c0d83c821:
+    post:
+      summary: Send Privacy Breach Incident Alert to OneTrust
+      description: Sends a JSON payload containing name, description, and jurisdictions to the specified webhook.
+      operationId: sendPrivacyBreachIncidentAlertToOneTrust
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "test"
+                description:
+                  type: string
+                  example: "test"
+                jurisdictions:
+                  type: array
+                  items:
+                    type: string
+                  example: ["France"]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Webhook processed successfully"
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error

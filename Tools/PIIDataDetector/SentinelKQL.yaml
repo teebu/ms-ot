@@ -2,7 +2,17 @@ Descriptor:
   Name: DetectNewAssetswithPIIDescriptionName
   DisplayName: Detect New Assets with PII (Descriptor Display Name)
   Description: Detects new assets with PII (Description Description)
-
+  Settings:
+    - Name: TenantId
+      Required: true
+    - Name: WorkspaceName
+      Required: true
+    - Name: SubscriptionId
+      Required: true
+    - Name: ResourceGroupName
+      Required: true
+  SupportedAuthTypes:
+    - None
 
 SkillGroups:
   - Format: KQL
@@ -12,28 +22,32 @@ SkillGroups:
         Description: Querying Purview sensitivity logs for new personal data detection details.
         Settings:
           Target: Sentinel
-          TenantId: 714a1b55-6ae7-46e7-aa08-8978b2c8746c
-          SubscriptionId: 8a081f00-1372-4400-9886-a704be213b86
-          ResourceGroupName: bond
+          # The ID of the AAD Organization that the Sentinel workspace is in.
+          TenantId: '{{TenantId}}'
+          # The id of the Azure Subscription that the Sentinel workspace is in.
+          SubscriptionId: '{{SubscriptionId}}'
+          # The name of the Resource Group that the Sentinel workspace is in.
+          ResourceGroupName: '{{ResourceGroupName}}'
+          # The name of the Sentinel workspace.
           WorkspaceName: '{{WorkspaceName}}'
           Template: |-
             // Get the two most recent run times and their RecordIds for the trigger rule
             // example question: are there any recent assets with pii detected?
 
-            let LastTwoRunTimes = 
+            let LastTwoRunTimes =
                 SentinelHealth
                 | where SentinelResourceName == "DetectNewAssetswithPII"
                 | order by TimeGenerated desc
                 | take 2
                 | summarize RunTimes = make_list(pack('TimeGenerated', TimeGenerated, 'RecordId', RecordId))
                 | project RunTimes;
-            
+
             // Extract the SecondLastRunTime and its RecordId
             let SecondLastRun = toscalar(
                 LastTwoRunTimes
                 | project RunTimes[1]
             );
-            
+
             // Extract the fields from the packed record
             //let SecondLastRunTime = todatetime(SecondLastRun.TimeGenerated);
             //let SecondLastRunRecordId = tostring(SecondLastRun.RecordId);
