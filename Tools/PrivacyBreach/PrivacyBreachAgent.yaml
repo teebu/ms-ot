@@ -54,17 +54,36 @@ SkillGroups:
             3. Contact information for any regulatory authorities that need to be notified
 
             Data to review starts here:
-            {{PersonRegions}}
-
+            Regions: {{PersonRegions}}
+            Volume of data subjects: {{VolumeOfDataSubjects}}
+            Personal data types: {{PersonalDataTypes}}
 
   - Format: Agent
     Skills:
       - Name: PrivacyBreachResponseAgent
         DisplayName: PrivacyBreachResponseAgent
         Description: The Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+        Interfaces:
+          - Agent
+        Inputs:
+          - Name: PersonRegions
+            Description: Provides a list of the peoples residency involved in the breach to determine jurisdictions in scope
+            DefaultValue: California
+            Required: true
+          - Name: VolumeOfDataSubjects
+            Description: The number of personal records per region involved in the breach
+            DefaultValue: null
+            Required: true
+          - Name: PersonalDataTypes
+            Description: The types of data elements involved in the breach by jurisdiction
+            DefaultValue: Email Address
+            Required: true
         Settings:
           Instructions: |
-            Perform PrivacyBreachAnalysis and send the privacy breach incident alert to OneTrust
+            Perform Privacy Breach Analysis and send the privacy breach incident alert to OneTrust
         ChildSkills:
           - PrivacyBreachAnalysis
           - sendPrivacyBreachIncidentAlertToOneTrust
+    Settings:
+      HistoryPassDownMode: None
+      IncludeSessionHistory: false
