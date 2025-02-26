@@ -53,4 +53,4 @@ SkillGroups:
                 minDatePerAsset
             ) on $left.AssetPath == $right.AssetPath and $left.AssetLastScanTime == $right.minScanTime
             | where AssetLastScanTime >= SecondLastRunTime
-            | limit 5
+            | limit 2

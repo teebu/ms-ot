@@ -3,9 +3,7 @@ info:
   title: Onetrust Integration Manager API
   description: API for sending queries to Integration Manager API
   version: 1.0.0
-servers:
-  - url: https://uat.onetrust.com
-    description: OneTrust UAT Environment
+
 paths:
   /integrationmanager/api/v1/webhook/954988c6-177d-4754-a71c-66d4fd06d7d9:
     post:

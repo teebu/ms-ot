@@ -9,8 +9,17 @@ Descriptor:
     Key: Authorization
     Location: Header
     AuthScheme: 'Bearer'
+  Settings: [
+    - Name: OneTrustOrganizationUrl
+      Label: Git Hub API URL for Organizations
+      Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+      HintText: "https://example.onetrust.com"
+      DefaultValue: "https://<organization>.onetrust.com"
+      SettingType: String
+      Required: true
 
 SkillGroups:
   - Format: API
     Settings:
       OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/ot_integration_manager_openapi.yaml
+      EndpointUrlSettingName: OneTrustOrganizationUrl
