@@ -26,11 +26,9 @@ paths:
                   description: Description of the privacy breach
                   example: "test"
                 jurisdictions:
-                  type: array
+                  type: string
                   description: List of affected jurisdictions
-                  items:
-                    type: string
-                  example: ["France"]
+                  example: "France"
       responses:
         '200':
           description: Successful response
