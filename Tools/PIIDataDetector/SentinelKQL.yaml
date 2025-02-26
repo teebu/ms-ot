@@ -1,21 +1,21 @@
 Descriptor:
-  Name: Detect New Assets with PII
-  DisplayName: DetectNewAssetswithPII
-  Description: Detects new assets with PII
+  Name: DetectNewAssetswithPIIDescriptionName
+  DisplayName: Detect New Assets with PII (Descriptor Display Name)
+  Description: Detects new assets with PII (Description Description)
 
 
 SkillGroups:
   - Format: KQL
     Skills:
       - Name: DetectNewAssetswithPII
-        DisplayName: Detects new assets with PII
+        DisplayName: Detects new assets with PII (skill display name)
         Description: Querying Purview sensitivity logs for new personal data detection details.
         Settings:
           Target: Sentinel
           TenantId: 714a1b55-6ae7-46e7-aa08-8978b2c8746c
           SubscriptionId: 8a081f00-1372-4400-9886-a704be213b86
           ResourceGroupName: bond
-          WorkspaceName: bond
+          WorkspaceName: '{{WorkspaceName}}'
           Template: |-
             // Get the two most recent run times and their RecordIds for the trigger rule
             // example question: are there any recent assets with pii detected?
