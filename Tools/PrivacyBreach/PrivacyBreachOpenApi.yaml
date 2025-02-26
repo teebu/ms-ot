@@ -13,6 +13,7 @@ paths:
       requestBody:
         description: |
           A JSON object containing details of the privacy breach, including the name, description, and an array of affected jurisdictions.
+          If the jurisdictions is a string, convert it to array of jurisdictions.
           Example Payload: {"name":"Data Leak Alert","description":"Sensitive Data","jurisdictions":["France"]}
         required: true
         content:
