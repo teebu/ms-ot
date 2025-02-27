@@ -1,7 +1,7 @@
 Descriptor:
-  Name: Privacy Breach Response
-  DisplayName: Privacy Breach Response
-  Description: The Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+  Name: OneTrustPrivacyBreachResponse
+  DisplayName: OneTrust Privacy Breach Response
+  Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
   SupportedAuthTypes:
     - ApiKey
   Authorization:
@@ -63,9 +63,9 @@ SkillGroups:
 
   - Format: Agent
     Skills:
-      - Name: PrivacyBreachResponseAgent
-        DisplayName: PrivacyBreachResponseAgent
-        Description: The Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+      - Name: OneTrustPrivacyBreachResponseAgent
+        DisplayName: OneTrust Privacy Breach Response Agent
+        Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
         Interfaces:
           - Agent
         Inputs:
