@@ -27,11 +27,9 @@ paths:
                   description: Detailed description of the privacy breach.
                   example: "Sensitive customer data was exposed due to a system misconfiguration."
                 jurisdictions:
-                  type: array
-                  items:
-                    type: string
-                  description: List of affected jurisdictions (must be an array of strings).
-                  example: [ "France", "Germany", "United States" ]
+                  type: string
+                  description: A comma-separated list of affected jurisdictions.
+                  example: "France, United Kingdom, Germany"
       responses:
         '200':
           description: Successful response

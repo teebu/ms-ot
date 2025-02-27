@@ -47,11 +47,11 @@ SkillGroups:
           Template: |-
             Assume the role of an expert privacy lawyer, specializing in global regulatory obligations for personal data breaches. Your task is to evaluate the scope of a breach involving personal data, and determine if its required to send notifications. Include these regulations in your analysis (AK-AS, AL-DBNA, AO-LECISS, AR-PIPA, AT-NDPL, AU-PA, AZ-RS, BA-LPPD, BD-DPL, BE-NDPL, BG-NDPL, BM-PIPA, BOL-DICT, BR-LGPD, BW-DPA, CA-CC, CA-PIPEDA, CH-FDPA, CN-CSL, CO-CPA, CO-LPPD, CR-PDPA, CT-GS, CY-NDPL, CZ-NDPL, DC-CODE, DE-NDPL, DE-SC, DK-NDPL, EE-NDPL, EG-LPPD, ES-PPDDR, FI-NDPL, FL-ST, FR-NDPL, GA-GC, GB-NDPL, GH-DPA, GR-NDPL, GUA-CON, GU-GCA, HI-RS, HK-PDO, HR-NDPL, HU-NDPL, IA-CODE, ID-PDPR, ID-ST, IE-NDPL, IL-PIPA, IL-PPA, IN-CODE, IN-DPB, IS-NDPL, IT-NDPL, JP-APPI, KE-DPA, KR-PIPA, KS-ST, KY-RS, LA-DSBNL, LE-LETPD, LI-NDPL, LS-DPA, LT-NDPL, LU-NDPL, LV-NDPL, MA-GL, Malaysian-PDPA, MD-MC, ME-RS, MI-ITPA, MN-ST, MO-PDPL, MO-RS, MS-CODE, MT-CODE, MT-NDPL, MU-DPA, MX-FPDL, NC-GS, ND-CC, NE-RS, NG-DPR, NH-RS, NJ-RS, NL-NDPL, NM-DBNA, NO-NDPL, NV-RS, NY-CL, NZ-PB, OH-RC, OK-ST, OR-RS, PAN-NCP, PA-ST, PE-PDPL, PH-DPA, PK-DPL, PL-NDPL, PR-LPR, PT-NDPL, QA-DPL, RI-GL, RO-NDPL, RU-PDPA, SA-DPL, SC-CODE, SD-CL, SE-NDPL, SG-PDPA, SI-NDPL, SK-NDPL, THA-PDPA, TN-CODE, TR-PDPL, TUN-PPD, TW-PIPA, TX-BCC, UG-DPA, US-HIPAA, UT-CODE, UY-PPD, VA-CODE, VI-CODE, VN-DPL, VT-ST, WA-RC, WI-ST, WV-CODE, WY-ST, WZ-DPL, ZA-PPIA, ZMB-DPA, MKD-PDP, SMR-LPNP, EGY-DPL)
 
-            For each of the Regions provide a structured output including:
-            1. Determine the Jurisidiction in scope based on the PersonRegions.
-            2. Concise guidance on notification obligations
-            3. A deadline for when communications must be sent out based on the  data of incident
-            4. Contact information for any regulatory authorities that need to be notified
+            For each of the Regions you must provide a structured output including:
+              - Determine the Jurisidiction in scope based on the PersonRegions.
+              - Concise guidance on notification obligations
+              - A deadline for when communications must be sent out based on the  data of incident
+              - **Contact information** for any regulatory authorities that need to be notified
 
             **Ensure that all relevant contact details for each Regulatory Authority are included**
 
@@ -63,7 +63,6 @@ SkillGroups:
             Website URL
 
             Accuracy is essential—double-check that the information is up-to-date and formatted correctly.
-
 
             Data to review starts here:
             Regions: {{PersonRegions}}
