@@ -21,7 +21,7 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecUrl: ./OneTrust_PrivacyBreachOpenApi.yaml
+      OpenApiSpecUrl: ./api/OneTrust-PrivacyBreach-web-api.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
   - Format: GPT
     Skills:
