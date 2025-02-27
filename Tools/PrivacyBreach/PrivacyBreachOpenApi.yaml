@@ -11,10 +11,7 @@ paths:
       description: Sends an incident alert with details, including jurisdictions.
       operationId: sendPrivacyBreachIncidentAlertToOneTrust
       requestBody:
-        description: |
-          A JSON object containing details of the privacy breach, including the name, description, and an array of affected jurisdictions.
-          If the jurisdictions is a string, convert it to array of jurisdictions.
-          Example Payload: {"name":"Data Leak Alert","description":"Sensitive Data","jurisdictions":["France"]}
+        description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
         required: true
         content:
           application/json:
@@ -30,11 +27,9 @@ paths:
                   description: Detailed description of the privacy breach.
                   example: "Sensitive customer data was exposed due to a system misconfiguration."
                 jurisdictions:
-                  type: array
-                  items:
-                    type: string
-                  description: List of affected jurisdictions (must be an array of strings).
-                  example: ["France", "Germany", "United States"]
+                  type: string
+                  description: A comma-separated list of affected jurisdictions.
+                  example: "France, United Kingdom, Germany"
       responses:
         '200':
           description: Successful response
