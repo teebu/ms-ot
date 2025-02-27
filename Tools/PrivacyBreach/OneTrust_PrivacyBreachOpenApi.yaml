@@ -8,7 +8,7 @@ paths:
   /integrationmanager/api/v1/webhook/f10eb14d-9545-4645-9de7-1f3c0d83c821:
     post:
       summary: Send Privacy Breach Incident Alert to OneTrust
-      description: Sends an incident alert with details, including jurisdictions.
+      description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
       operationId: sendPrivacyBreachIncidentAlertToOneTrust
       requestBody:
         description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
