@@ -53,9 +53,9 @@ SkillGroups:
             3. A deadline for when communications must be sent out based on the  data of incident
             4. Contact information for any regulatory authorities that need to be notified
 
-            Please ensure that all relevant contact details for each Regulatory Authority are included.
+            **Ensure that all relevant contact details for each Regulatory Authority are included**
 
-            For each region where the incident occurred, provide the complete contact information, including:
+            For each region where the incident occurred, you must provide the complete contact information, including:
             Official Name of the Regulatory Authority
             Address (Street, City, Postal Code, Country)
             Phone Number (Including country code)
