@@ -10,6 +10,11 @@ Sample text with one region:
 There was a breach in Azure SQL containing 5000 credit card numbers of Data Subjects from France. Who do I need to notify?
 ```
 
+Sample text to not show answer, just create incident record in OneTrust:
+``` 
+There was a breach in Azure SQL containing 5000 credit card numbers of Data Subjects from France, Germany and California.
+```
+
 Sample generated payload sent to OneTrust:
 ```
 {

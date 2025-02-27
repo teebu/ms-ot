@@ -51,9 +51,18 @@ SkillGroups:
             1. Determine the Jurisidiction in scope based on the PersonRegions.
             2. Concise guidance on notification obligations
             3. A deadline for when communications must be sent out based on the  data of incident
-            4. **Contact information for any regulatory authorities that need to be notified**
+            4. Contact information for any regulatory authorities that need to be notified
 
-            It's important to include Contact Information for the Regulatory Authorities for each of the regions the incident occured.
+            Please ensure that all relevant contact details for each Regulatory Authority are included.
+
+            For each region where the incident occurred, provide the complete contact information, including:
+            Official Name of the Regulatory Authority
+            Address (Street, City, Postal Code, Country)
+            Phone Number (Including country code)
+            Email Address
+            Website URL
+
+            Accuracy is essential—double-check that the information is up-to-date and formatted correctly.
 
 
             Data to review starts here:
