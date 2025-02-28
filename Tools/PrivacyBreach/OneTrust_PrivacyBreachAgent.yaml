@@ -2,6 +2,7 @@ Descriptor:
   Name: OneTrustPrivacyBreachResponse
   DisplayName: OneTrust Privacy Breach Response
   Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+  Icon: https://www.onetrust.com/favicon.svg
   SupportedAuthTypes:
     - ApiKey
   Authorization:
@@ -13,8 +14,8 @@ Descriptor:
     - Name: OneTrustOrganizationUrl
       Label: Onetrust API URL for Organizations
       Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
-      HintText: "https://example.onetrust.com"
-      DefaultValue: "https://<organization>.onetrust.com"
+      HintText: "https://myorganization.onetrust.com"
+      DefaultValue: "https://<myorganization>.onetrust.com"
       SettingType: String
       Required: true
 
@@ -25,8 +26,8 @@ SkillGroups:
       EndpointUrlSettingName: OneTrustOrganizationUrl
   - Format: GPT
     Skills:
-      - Name: PrivacyBreachAnalysis
-        DisplayName: Perform a privacy breach analysis
+      - Name: OneTrustPrivacyBreachAnalysis
+        DisplayName: OneTrust Privacy Breach Analysis
         Description: Perform a privacy breach analysis based on jurisdictions in scope, sensitivity of the data, and volume of data subjects
         DescriptionForModel: |
           Performs an expert data privacy analysis using GPT to assess and evaluate notification requirements for a data privacy breach. The output provides a structured view of regulatory obligations, law citations, guidance, and recommended tasks for resolving.
@@ -105,8 +106,9 @@ SkillGroups:
         Settings:
           Instructions: |
             Your goal is to perform Privacy Breach Analysis, return the response to the user and call the the privacy breach incident alert skill to submit the incident to OneTrust.
+            #ExamplePrompt: There was a breach in Azure SQL containing 5000 credit card numbers of Data Subjects from France. Who do I need to notify?
         ChildSkills:
-          - PrivacyBreachAnalysis
+          - OneTrustPrivacyBreachAnalysis
           - sendPrivacyBreachIncidentAlertToOneTrust
     Settings:
       HistoryPassDownMode: None
