@@ -30,7 +30,6 @@ SkillGroups:
         Description: Perform a privacy breach analysis based on jurisdictions in scope, sensitivity of the data, and volume of data subjects
         DescriptionForModel: |
           Performs an expert data privacy analysis using GPT to assess and evaluate notification requirements for a data privacy breach. The output provides a structured view of regulatory obligations, law citations, guidance, and recommended tasks for resolving.
-          #ExamplePrompt: There was a breach in Azure SQL containing 5000 credit card numbers of Data Subjects from France. Who do I need to notify?
         Inputs:
           - Name: PersonRegions
             Description: Provides a list of the peoples residency involved in the breach to determine jurisdictions in scope
@@ -105,7 +104,7 @@ SkillGroups:
             Required: true
         Settings:
           Instructions: |
-            Your goal is to perform Privacy Breach Analysis, after that you must send the privacy breach incident alert to OneTrust.
+            Your goal is to perform Privacy Breach Analysis, return the response to the user and call the the privacy breach incident alert skill to submit the incident to OneTrust.
         ChildSkills:
           - PrivacyBreachAnalysis
           - sendPrivacyBreachIncidentAlertToOneTrust
