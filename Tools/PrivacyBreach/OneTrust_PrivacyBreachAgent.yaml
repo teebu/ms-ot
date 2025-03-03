@@ -90,19 +90,6 @@ SkillGroups:
         Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
         Interfaces:
           - Agent
-        Inputs:
-          - Name: PersonRegions
-            Description: Provides a list of the peoples residency involved in the breach to determine jurisdictions in scope
-            DefaultValue: California
-            Required: true
-          - Name: VolumeOfDataSubjects
-            Description: The number of personal records per region involved in the breach
-            DefaultValue: null
-            Required: true
-          - Name: PersonalDataTypes
-            Description: The types of data elements involved in the breach by jurisdiction
-            DefaultValue: Email Address
-            Required: true
         Settings:
           Instructions: |
             Your goal is to perform Privacy Breach Analysis, return the response to the user and call the the privacy breach incident alert skill to submit the incident to OneTrust.
