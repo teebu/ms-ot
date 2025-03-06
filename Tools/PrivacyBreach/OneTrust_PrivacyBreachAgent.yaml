@@ -118,7 +118,8 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Always perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and return the response to the user and call the sendPrivacyBreachIncidentAlertToOneTrust skill to submit the incident to OneTrust.
+            Always perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and return the response to the user.
+            Always call the sendPrivacyBreachIncidentAlertToOneTrust skill to submit the incident to OneTrust and show the call was made and return the response from OneTrust.
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
           - sendPrivacyBreachIncidentAlertToOneTrust
