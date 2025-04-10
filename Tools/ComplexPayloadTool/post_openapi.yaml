@@ -3,7 +3,7 @@ info:
   title: Joke Submission API
   version: 1.0.0
 servers:
-  - url: https://mushy-ocean-43.webhook.cool
+  - url: https://glamorous-teenager-28.webhook.cool
 paths:
   /submit_joke:
     post:
