@@ -1,10 +1,8 @@
 openapi: 3.0.0
 info:
   title: Jokes API
+  description: Endpoints related to jokes
   version: 1.0.0
-  tags:
-    - name: jokes
-      description: Endpoints related to jokes
 servers:
   - url: https://mushy-ocean-43.webhook.cool
 paths:
@@ -17,8 +15,6 @@ paths:
         The punchline is an array of strings, allowing for multiple punchlines per joke.
         This is useful for testing the webhook's ability to handle complex JSON structures.
       operationId: joke_reciever
-      tags:
-        - jokes
       requestBody:
         required: true
         content:
