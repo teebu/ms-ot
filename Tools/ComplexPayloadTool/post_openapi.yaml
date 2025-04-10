@@ -8,8 +8,10 @@ paths:
   /submit_joke:
     post:
       summary: Submit a new joke
+      description: Submits a joke with a question and answer to the server.
       operationId: submitJoke
       requestBody:
+        description: A JSON object containing the joke question and answer.
         required: true
         content:
           application/json:
@@ -25,6 +27,9 @@ paths:
               required:
                 - question
                 - answer
+              example: 
+                question: "Why did the chicken cross the road?"
+                answer: "To get to the other side!"
       responses:
         '200':
           description: Joke submitted successfully
