@@ -16,24 +16,15 @@ paths:
             schema:
               type: object
               properties:
-                jokes:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      question:
-                        type: string
-                        example: Why don't scientists trust atoms?
-                      punchline:
-                        type: array
-                        items:
-                          type: string
-                        example: 
-                          - Because they make up everything!
-                          - Because they lie all the time!
-                          - Because they are always in a state of excitement!
+                question:
+                  type: string
+                  example: Why don't scientists trust atoms?
+                answer:
+                  type: string
+                  example: Because they make up everything!
               required:
-                - jokes
+                - question
+                - answer
       responses:
         '200':
           description: Joke submitted successfully
