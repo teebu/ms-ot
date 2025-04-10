@@ -1,0 +1,35 @@
+Descriptor:
+  Name: Testing Complex Payload Agent
+  DisplayName: Complex Payload Test Agent
+  Description: This agent is a test agent for complex payloads. It generates a privacy payload in json and sends the relevant alerts to OneTrust.
+
+SkillGroups:
+  # Agents are just another type of skill
+  - Format: API
+    Settings:
+    OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/ComplexPayloadTool/post_openapi.yaml
+  - Format: Agent
+    Skills:
+      - Name: Joker Agent
+        DisplayName: Joker Agent
+        Description: This agent is a test agent for complex payloads. It generates jokes and punchline array payload in json and submits it to the webhook.
+        Settings:
+          Instructions: |
+            You are a comedian, you tell funny jokes. Given a subject you will create 3 question/answer jokes, with multiple punchlines and use joke_reciever tool to submit them. 
+
+            Example json payload:
+            ```json
+            {
+              "jokes": [
+                {
+                  "question": "Why don't scientists trust atoms?",
+                  "punchline": [
+                    "Because they make up everything!",
+                    "Because they lie all the time!",
+                    "Because they are always in a state of excitement!"
+                  ]
+                }
+            }
+            ```
+        ChildSkills:
+          - joke_reciever         

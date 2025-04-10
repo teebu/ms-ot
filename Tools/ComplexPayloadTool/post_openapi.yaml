@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Jokes API
+  version: 1.0.0
+  tags:
+    - name: jokes
+      description: Endpoints related to jokes
+servers:
+  - url: https://mushy-ocean-43.webhook.cool
+paths:
+  /joke_reciever:
+    post:
+      summary: Submit a list of jokes
+      description: |
+        Sends a JSON payload containing a list of jokes to the webhook endpoint.
+        The payload includes a list of jokes, each with a question and punchline.
+        The punchline is an array of strings, allowing for multiple punchlines per joke.
+        This is useful for testing the webhook's ability to handle complex JSON structures.
+      operationId: joke_reciever
+      tags:
+        - jokes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JokesResponse'
+      responses:
+        "200":
+          description: Successfully received the jokes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    JokesResponse:
+      type: object
+      properties:
+        jokes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Joke'
+    Joke:
+      type: object
+      properties:
+        question:
+          type: string
+        punchline:
+          type: array
+          items:
+            type: string
