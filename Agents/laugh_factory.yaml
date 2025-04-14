@@ -10,9 +10,9 @@ SkillGroups:
       OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/ComplexPayloadTool/post_openapi.yaml
   - Format: GPT
     Skills:
-      - Name: JokerGeneratorAgent
-        DisplayName: Joker Generator Agent
-        Description: The Joke Generator Agent is used to create jokes. It generates jokes and punchline payload in json and submits it to the server.                         
+      - Name: CreateJoke
+        DisplayName: Create Joke
+        Description: Create a joke about a subject
         Inputs:
           - Name: subject
             Description: Subject for the joke
@@ -21,9 +21,10 @@ SkillGroups:
         Settings:
           ModelName: gpt-4o
           Template: |-
+            <instructions>
             You are a comedian, you tell funny jokes. 
             
-            Given a {{subject}} you will create 1 question/answer joke.
+            Given a subject you will create 1 question/answer joke.
             
             Example json payload:
             ```json
@@ -32,14 +33,17 @@ SkillGroups:
                 "answer": "Because he didn't want to be a hot dog!",
               }
             ```
+            <instructions>
+
+            Subject: {{subject}}
   - Format: Agent
     Skills:
-      - Name: Comedian Agent
-        DisplayName: ComedianAgent
-        Description: The Comedian Agent is used to create jokes.
+      - Name: ComedianAgent
+        DisplayName: Comedian Agent
+        Description: The Comedian Agent creates jokes and submits them to the server.
         DescriptionForModel: |
-          A user asks for a joke to be created about a subject of their choice and the agent generates a joke.
-          The agent generates a JSON payload containing the joke and submits it.    
+          The user requests a joke about a specific subject, and the agent generates a humorous question/answer joke based on the subject. 
+          The agent formats the joke as a JSON payload and submits it to the server.    
           
           #ExamplePrompt: tell me a joke about a dog
           #ExamplePrompt: make a joke about cats
@@ -60,12 +64,12 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Always create a joke about the {{subject}} provided by the user using JokerGeneratorAgent.
-            Always create a JSON payload containing the joke and punchline.
-            Always submit the payload using submitJoke.
+            Using CreateJoke tool about the subject create 5 jokes and return them to the user.
+            Pick the best joke and explain why it was the best to the user.
+            Then submit the best joke using the submitJoke tool.
         ChildSkills:
-          - JokerGeneratorAgent
+          - CreateJoke
           - submitJoke
     Settings:
       HistoryPassDownMode: None
-      IncludeSessionHistory: false          
+      IncludeSessionHistory: false
