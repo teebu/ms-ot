@@ -9,6 +9,9 @@ paths:
     post:
       summary: Send Privacy Breach Incident Alert to OneTrust
       description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
+      x-ms-cfs-configuration:
+        preview-state: Private
+        preview-start-time: 2025-04-15T00:00:00.0000000
       operationId: sendPrivacyBreachIncidentAlertToOneTrust
       requestBody:
         description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
