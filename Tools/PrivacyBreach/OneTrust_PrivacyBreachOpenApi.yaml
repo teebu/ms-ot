@@ -34,7 +34,7 @@ paths:
                   description: A comma-separated list of affected jurisdictions.
                   example: "France, United Kingdom, Germany"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -44,7 +44,23 @@ paths:
                   message:
                     type: string
                     example: "Webhook processed successfully"
-        '400':
+        "400":
           description: Bad request - Invalid input parameters
-        '500':
+        "500":
           description: Internal server error
+  /api/incident/v1/incidents/{incidentId}/assess-jurisdictions:
+    post:
+      summary: Trigger Guidance
+      description: Triggers guidance assessment for the given incident's jurisdictions.
+      operationId: triggerGuidance
+      security:
+      parameters:
+        - name: incidentId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      responses:
+        "200":
+          description: Guidance triggered successfully
