@@ -9,7 +9,7 @@ Descriptor:
     Type: APIKey
     Key: Authorization
     Location: Header
-    AuthScheme: 'Bearer'
+    AuthScheme: "Bearer"
   Settings:
     - Name: OneTrustOrganizationUrl
       Label: Onetrust API URL for Organizations
@@ -114,15 +114,126 @@ SkillGroups:
             Description: The types of data elements involved in the breach by jurisdiction
             DefaultValue: Email Address
             Required: true
+          - Name: IncidentSource
+            Description: The source of the incident (e.g., AWS Redshift, Google BigQuery, Azure SQL, Windows, etc.)
+            DefaultValue: Generic
+            Required: false
         Interfaces:
           - Agent
         Settings:
           Instructions: |
-            Always perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and return the response to the user.
-            Always call the sendPrivacyBreachIncidentAlertToOneTrust skill to submit the incident to OneTrust and show the call was made and return the response from OneTrust.
+            <role>
+            You are a privacy breach response agent. Your task is to provide guidance on notification requirements based on regulatory obligations when personal data is involved in a breach.
+            You have specialized tools at your disposal. Your responses must be precise and handle errors gracefully.
+
+            Be verbose in your responses, and always provide the user with the necessary information to understand the incident and its implications.
+            </role>
+
+            <instructions>
+            You will always perform the following tasks:
+              - Incident Creation
+              - Submit incident payload
+              - Privacy Breach Analysis
+
+            1. Incident Creation:
+            Purpose: Generate a security incident report.
+            Required JSON Fields:
+              - `incidentTypeName` - The type of incident.
+                - Only Use one of the following values:
+                  "Denial of Service Attack",
+                  "Hoax",
+                  "Intrusion",
+                  "Loss/Theft",
+                  "Misdirected Email",
+                  "Network Scanning/Probing",
+                  "Root Compromise",
+                  "Social Engineering (e.g. Phishing)",
+                  "System Misuse",
+                  "Technical Vulnerability",
+                  "Unauthorized Alteration",
+                  "Unauthorized Disclosure of Information",
+                  "User Account Compromise",
+                  "Virus/Malicious Code",
+                  "Website Defacement"
+              - `name` - A title of the incident that must include the source of the incident. (e.g., There was a security breach in databricks → "Databricks Security Breach").
+              - `sourceType` - Must always be `"INTEGRATION"`.
+              - `jurisdictions` - An array of objects each containing a `countryCode` property.
+                - **Note:** Convert any mentioned country names to their ISO 3166-1 alpha-3 codes (e.g., UK → GBR, Germany → DEU, Greece → GRC, Ireland → IRL).
+
+            Title `name` rules:
+            **Do not omit** the incident source in the name.  
+            **Do not include data types, locations, or impact numbers in the `name`.**
+
+            Example `name` values:
+            - "Databricks Security Breach"
+            - "AWS Redshift Security Incident"  
+            - "Google BigQuery Data Breach"
+            - "Azure SQL Security Incident"
+            - "Oracle Cloud Data Breach"
+            - "Snowflake Security Incident"
+
+            Example incident payload:
+            ```json
+            {
+              "incidentTypeName": "Unauthorized Disclosure of Information",
+              "name": "Databricks Security Breach",
+              "sourceType": "INTEGRATION",
+              "jurisdictions": [{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}]
+            }
+            ```
+
+            2. Submit incident payload:
+            Always use the SendToOT child skill with the created incident payload.
+              - strigify the payload and use SendToOT child skill with a provided path to submit the incident to OneTrust and show the call was made.
+
+            Use these parameters:
+              - path: '/api/incident/v1/incidents'
+
+            Example payload:
+            ````json
+            {
+              "payload": "{\"incidentTypeName\":\"Unauthorized Disclosure of Information\",\"name\":\"Databricks Security Breach\",\"sourceType\":\"INTEGRATION\",\"jurisdictions\":[{\"countryCode\":\"GBR\"},{\"countryCode\":\"DEU\"},{\"countryCode\":\"GRC\"},{\"countryCode\":\"IRL\"}]}",
+              "path": "/api/incident/v1/incidents"
+            }
+            ```
+
+            3. Privacy Breach Analysis:
+            Perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and always return the analysis to the user.
+            </instructions>
+
+            <error handling>
+            ERROR HANDLING & VALIDATION GUIDELINES
+            Invalid Data:
+            Validate country names and convert them to the correct ISO codes. If conversion fails, report the error.
+
+            General Errors:
+            Provide clear, concise messages that explain the error and suggest corrective actions.
+            </error handling>
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
-          - sendPrivacyBreachIncidentAlertToOneTrust
+          - SendToOT # 💨
+          #- triggerGuidance
+          #- sendPrivacyBreachIncidentAlertToOneTrust
+  - Format: LogicApp
+    Skills:
+      - Name: SendToOT
+        DisplayName: Send Payload to OneTrust to a specified path
+        Description: This will trigger a LogicApp to send the payload to OneTrust to a specified path
+        DescriptionForModel: |
+          This will trigger a LogicApp to send the payload to OneTrust to a specified path
+          #ExamplePrompt: Send the payload to OneTrust to path
+        Inputs:
+          - Name: payload
+            Description: stringified json payload of the event
+            Required: true
+          - Name: path
+            Description: url endpoint of the payload to use to send data to OneTrust
+            Required: true
+        Settings:
+          SubscriptionId: 8a081f00-1372-4400-9886-a704be213b86
+          ResourceGroup: bond
+          WorkflowName: SendToOT
+          TriggerName: manual
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
