@@ -157,6 +157,7 @@ SkillGroups:
                   "Website Defacement"
               - `name` - A title of the incident that must include the source of the incident. (e.g., There was a security breach in databricks → "Databricks Security Breach").
               - `sourceType` - Must always be `"INTEGRATION"`.
+              - `autoAssessJurisdictions` - Always set to `true`.
               - `jurisdictions` - An array of objects each containing a `countryCode` property.
                 - **Note:** Convert any mentioned country names to their ISO 3166-1 alpha-3 codes (e.g., UK → GBR, Germany → DEU, Greece → GRC, Ireland → IRL).
 
@@ -178,15 +179,16 @@ SkillGroups:
               "incidentTypeName": "Unauthorized Disclosure of Information",
               "name": "Databricks Security Breach",
               "sourceType": "INTEGRATION",
-              "jurisdictions": [{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}]
+              "jurisdictions": [{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}],
+              "autoAssessJurisdictions": true
             }
             ```
 
             2. Submit incident payload:
             Always use the SendToOT child skill with the created incident payload.
-              - strigify the payload and use SendToOT child skill with a provided path to submit the incident to OneTrust and show the call was made.
+              - strigify the payload and use SendToOT child skill with a provided path to submit the incident to OneTrust
 
-            Use these parameters:
+            Always Use these parameters:
               - path: '/api/incident/v1/incidents'
 
             Example payload:
@@ -211,8 +213,7 @@ SkillGroups:
             </error handling>
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
-          - SendToOT # 💨
-          #- triggerGuidance
+          - SendToOT
           #- sendPrivacyBreachIncidentAlertToOneTrust
   - Format: LogicApp
     Skills:

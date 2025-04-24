@@ -3,72 +3,72 @@ info:
   title: OneTrust Integration Manager API
   description: API to send privacy breach incident alerts to OneTrust
   version: 1.0.0
-#todo: make endpoint variable?
 paths:
-  /integrationmanager/api/v1/webhook/f10eb14d-9545-4645-9de7-1f3c0d83c821:
+  /api/incident/v1/incidents:
     post:
       summary: Send Privacy Breach Incident Alert to OneTrust
       description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
       x-ms-cfs-configuration:
         preview-state: Private
         preview-start-time: 2025-04-15T00:00:00.0000000
-      operationId: sendPrivacyBreachIncidentAlertToOneTrust
+      operationId: createIncident
       requestBody:
-        description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
         required: true
+        description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
         content:
           application/json:
             schema:
               type: object
+              required:
+                - incidentTypeName
+                - name
+                - sourceType
+                - jurisdictions
               properties:
+                incidentTypeName:
+                  type: string
+                  enum:
+                    - Denial of Service Attack
+                    - Hoax
+                    - Intrusion
+                    - Loss/Theft
+                    - Misdirected Email
+                    - Network Scanning/Probing
+                    - Root Compromise
+                    - Social Engineering (e.g. Phishing)
+                    - System Misuse
+                    - Technical Vulnerability
+                    - Unauthorized Alteration
+                    - Unauthorized Disclosure of Information
+                    - User Account Compromise
+                    - Virus/Malicious Code
+                    - Website Defacement
+                  example: Unauthorized Disclosure of Information
                 name:
                   type: string
-                  description: Name of the incident or alert.
-                  example: "Data Leak Alert"
-                description:
+                  example: Unsecured Database Exposure - Real Estate Wealth Network
+                sourceType:
                   type: string
-                  description: Detailed description of the privacy breach.
-                  example: "Sensitive customer data was exposed due to a system misconfiguration."
+                  example: INTEGRATION
                 jurisdictions:
-                  type: string
-                  description: A comma-separated list of affected jurisdictions.
-                  example: "France, United Kingdom, Germany"
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      countryCode:
+                        type: string
+                        example: FRA
+                autoAssessJurisdictions:
+                  type: boolean
+                  example: true
       responses:
         "200":
-          description: Successful response
+          description: Successful creation of incident
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  incidentid:
                     type: string
-                    example: "Webhook processed successfully"
-        "400":
-          description: Bad request - Invalid input parameters
-        "500":
-          description: Internal server error
-  /api/incident/v1/incidents/{incidentId}/assess-jurisdictions:
-    post:
-      summary: Trigger Guidance
-      description: Triggers guidance assessment for the given incident's jurisdictions.
-      operationId: triggerGuidance
-      parameters:
-        - name: incidentId
-          in: path
-          required: true
-          schema:
-            type: string
-          example: "12345"
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
-      responses:
-        "200":
-          description: Guidance triggered successfully
-        "202":
-          description: Request accepted for processing, but the operation is not yet complete
+                    example: "12345"
