@@ -4,92 +4,13 @@ info:
   description: API to send privacy breach incident alerts to OneTrust
   version: 1.0.0
 paths:
-  /api/incident/v1/incidents:
-    post:
-      summary: Send Privacy Breach Incident Alert to OneTrust
-      description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
-      x-ms-cfs-configuration:
-        preview-state: Private
-        preview-start-time: 2025-04-15T00:00:00.0000000
-      operationId: createIncident
-      requestBody:
-        required: true
-        description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - incidentTypeName
-                - name
-                - sourceType
-                - jurisdictions
-              properties:
-                incidentTypeName:
-                  type: string
-                  enum:
-                    - Denial of Service Attack
-                    - Hoax
-                    - Intrusion
-                    - Loss/Theft
-                    - Misdirected Email
-                    - Network Scanning/Probing
-                    - Root Compromise
-                    - Social Engineering (e.g. Phishing)
-                    - System Misuse
-                    - Technical Vulnerability
-                    - Unauthorized Alteration
-                    - Unauthorized Disclosure of Information
-                    - User Account Compromise
-                    - Virus/Malicious Code
-                    - Website Defacement
-                  example: Unauthorized Disclosure of Information
-                name:
-                  type: string
-                  example: Unsecured Database Exposure - Real Estate Wealth Network
-                sourceType:
-                  type: string
-                  example: INTEGRATION
-                jurisdictions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      countryCode:
-                        type: string
-                        example: FRA
-                autoAssessJurisdictions:
-                  type: boolean
-                  example: true
-                linkedInventories:
-                  type: object
-                  description: |
-                    Inventory link details for the incident.
-                  properties:
-                    assets:
-                      title: InventoryLinkCreationRequest
-                      type: object
-                      properties:
-                        externalIds:
-                          type: array
-                          description: Set of external identifiers for assets
-                          items:
-                            type: string
-      responses:
-        "200":
-          description: Successful creation of incident
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  incidentid:
-                    type: string
-                    example: "12345"
   /api/inventory/v2/inventories/assets/reference/{SourceName}:
     put:
       summary: Create Asset by External Source Name
       description: Creates or updates an asset identified by an external Source Name.
+      x-ms-cfs-configuration:
+        preview-state: Private
+        preview-start-time: 2025-04-15T00:00:00.0000000
       operationId: createOrUpdateAsset
       parameters:
         - name: SourceName
@@ -113,3 +34,85 @@ paths:
       responses:
         "200":
           description: Asset created or updated successfully
+  # /api/incident/v1/incidents:
+  #   post:
+  #     summary: Send Privacy Breach Incident Alert to OneTrust
+  #     description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
+  #     x-ms-cfs-configuration:
+  #       preview-state: Private
+  #       preview-start-time: 2025-04-15T00:00:00.0000000
+  #     operationId: createIncident
+  #     requestBody:
+  #       required: true
+  #       description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             required:
+  #               - incidentTypeName
+  #               - name
+  #               - sourceType
+  #               - jurisdictions
+  #             properties:
+  #               incidentTypeName:
+  #                 type: string
+  #                 enum:
+  #                   - Denial of Service Attack
+  #                   - Hoax
+  #                   - Intrusion
+  #                   - Loss/Theft
+  #                   - Misdirected Email
+  #                   - Network Scanning/Probing
+  #                   - Root Compromise
+  #                   - Social Engineering (e.g. Phishing)
+  #                   - System Misuse
+  #                   - Technical Vulnerability
+  #                   - Unauthorized Alteration
+  #                   - Unauthorized Disclosure of Information
+  #                   - User Account Compromise
+  #                   - Virus/Malicious Code
+  #                   - Website Defacement
+  #                 example: Unauthorized Disclosure of Information
+  #               name:
+  #                 type: string
+  #                 example: Unsecured Database Exposure - Real Estate Wealth Network
+  #               sourceType:
+  #                 type: string
+  #                 example: INTEGRATION
+  #               jurisdictions:
+  #                 type: array
+  #                 items:
+  #                   type: object
+  #                   properties:
+  #                     countryCode:
+  #                       type: string
+  #                       example: FRA
+  #               autoAssessJurisdictions:
+  #                 type: boolean
+  #                 example: true
+  #               linkedInventories:
+  #                 type: object
+  #                 description: |
+  #                   Inventory link details for the incident.
+  #                 properties:
+  #                   assets:
+  #                     title: InventoryLinkCreationRequest
+  #                     type: object
+  #                     properties:
+  #                       externalIds:
+  #                         type: array
+  #                         description: Set of external identifiers for assets
+  #                         items:
+  #                           type: string
+  #     responses:
+  #       "200":
+  #         description: Successful creation of incident
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 incidentid:
+  #                   type: string
+  #                   example: "12345"
