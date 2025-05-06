@@ -61,6 +61,20 @@ paths:
                 autoAssessJurisdictions:
                   type: boolean
                   example: true
+                linkedInventories:
+                  type: object
+                  description: |
+                    Inventory link details for the incident.
+                  properties:
+                    assets:
+                      title: InventoryLinkCreationRequest
+                      type: object
+                      properties:
+                        externalIds:
+                          type: array
+                          description: Set of external identifiers for assets
+                          items:
+                            type: string
       responses:
         "200":
           description: Successful creation of incident
@@ -72,3 +86,30 @@ paths:
                   incidentid:
                     type: string
                     example: "12345"
+  /api/inventory/v2/inventories/assets/reference/{SourceName}:
+    put:
+      summary: Create Asset by External Source Name
+      description: Creates or updates an asset identified by an external Source Name.
+      operationId: createOrUpdateAsset
+      parameters:
+        - name: SourceName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: asset-001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: asset-001
+      responses:
+        "200":
+          description: Asset created or updated successfully
