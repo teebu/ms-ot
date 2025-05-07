@@ -1,0 +1,175 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppName": {
+      "type": "string"
+    },
+    "keyVaultName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 24,
+      "metadata": {
+        "description": "Globally unique name for the Key Vault. Uses the current resource group name plus '-ot-kv' by default. Must be 3-24 characters, alphanumeric or hyphens, start with a letter, end with a letter or digit."
+      }
+    },
+    "token": {
+      "type": "string",
+      "defaultValue": "Bearer <token>"
+    },
+    "host": {
+      "type": "string",
+      "defaultValue": "https://yourcompany.onetrust.com"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('logicAppName')]",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "payload": { "type": "string" },
+                    "path": { "type": "string" }
+                  },
+                  "required": ["payload", "path"]
+                }
+              }
+            }
+          },
+          "actions": {
+            "Parse_JSON": {
+              "runAfter": {},
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()?['payload']",
+                "schema": { "type": "object" }
+              }
+            },
+            "GetSecret-Token": {
+              "runAfter": { "Parse_JSON": ["Succeeded"] },
+              "type": "Http",
+              "inputs": {
+                "uri": "[concat('https://', parameters('keyVaultName'), '.vault.azure.net/secrets/token?api-version=7.2')]",
+                "method": "GET",
+                "headers": { "Content-Type": "application/json" },
+                "authentication": {
+                  "type": "ManagedServiceIdentity",
+                  "audience": "https://vault.azure.net"
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": { "transferMode": "Chunked" },
+                "secureData": { "properties": ["inputs", "outputs"] }
+              }
+            },
+            "GetSecret-Host": {
+              "runAfter": { "GetSecret-Token": ["Succeeded"] },
+              "type": "Http",
+              "inputs": {
+                "uri": "[concat('https://', parameters('keyVaultName'), '.vault.azure.net/secrets/host?api-version=7.2')]",
+                "method": "GET",
+                "headers": { "Content-Type": "application/json" },
+                "authentication": {
+                  "type": "ManagedServiceIdentity",
+                  "audience": "https://vault.azure.net"
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": { "transferMode": "Chunked" },
+                "secureData": { "properties": ["inputs", "outputs"] }
+              }
+            },
+            "HTTP": {
+              "runAfter": { "GetSecret-Host": ["Succeeded"] },
+              "type": "Http",
+              "inputs": {
+                "uri": "@{body('GetSecret-Host')?['value']}@{triggerBody()?['path']}",
+                "method": "POST",
+                "headers": {
+                  "Content-Type": "application/json",
+                  "Authorization": "@{body('GetSecret-Token')?['value']}"
+                },
+                "body": "@string(body('Parse_JSON'))"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": { "transferMode": "Chunked" }
+              }
+            }
+          },
+          "outputs": {},
+          "parameters": {
+            "$connections": {
+              "type": "Object",
+              "defaultValue": {}
+            }
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "type": "Object",
+            "value": {}
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2019-09-01",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "tenantId": "[subscription().tenantId]",
+        "sku": { "family": "A", "name": "standard" },
+        "accessPolicies": [],
+        "enableSoftDelete": true,
+        "enableRbacAuthorization": true
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[concat(parameters('keyVaultName'), '/token')]",
+      "properties": {
+        "value": "[parameters('token')]"
+      },
+      "dependsOn": ["[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[concat(parameters('keyVaultName'), '/host')]",
+      "properties": {
+        "value": "[parameters('host')]"
+      },
+      "dependsOn": ["[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceGroup().id, parameters('keyVaultName'), parameters('logicAppName'), 'KeyVaultSecretsUser')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')]",
+        "principalId": "[reference(resourceId('Microsoft.Logic/workflows', parameters('logicAppName')), '2019-05-01', 'Full').identity.principalId]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Logic/workflows', parameters('logicAppName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ]
+    }
+  ]
+}

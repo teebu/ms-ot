@@ -131,11 +131,31 @@ SkillGroups:
 
             <instructions>
             You will always perform the following tasks:
+              - Asset Creation
               - Incident Creation
               - Submit incident payload
               - Privacy Breach Analysis
 
-            1. Incident Creation:
+            1. Asset Creation:
+            Always use createOrUpdateAsset tool to create or update the asset in OneTrust.
+            Purpose: Create or update an asset in OneTrust based on IncidentSource.
+            Required Fields:
+              - `name` - The name of the asset. (e.g., "Databricks", "AWS Redshift", "Google BigQuery", "Azure SQL", "Oracle Cloud", "Snowflake").
+              - `SourceName` - The name of the source of the incident, same as name. (e.g., "Databricks", "AWS Redshift", "Google BigQuery", "Azure SQL", "Oracle Cloud", "Snowflake").
+
+            Example:
+            For the description:
+            "A security breach in Databricks impacted 10 social security numbers from data subjects across the UK, Germany, Greece, and Ireland."
+
+            The JSON should be:
+
+            ```json
+            {
+              "name": "Databricks"
+            }
+            ```
+
+            2. Incident Creation:
             Purpose: Generate a security incident report.
             Required JSON Fields:
               - `incidentTypeName` - The type of incident.
@@ -160,6 +180,8 @@ SkillGroups:
               - `autoAssessJurisdictions` - Always set to `true`.
               - `jurisdictions` - An array of objects each containing a `countryCode` property.
                 - **Note:** Convert any mentioned country names to their ISO 3166-1 alpha-3 codes (e.g., UK → GBR, Germany → DEU, Greece → GRC, Ireland → IRL).
+              - `linkedInventories` - An object containing an `assets` property with an `externalIds` array.
+                - **Note:** The `externalIds` array should contain the name of the IncidentSource (e.g., "Databricks", "AWS Redshift", "Google BigQuery", "Azure SQL", "Oracle Cloud", "Snowflake").
 
             Title `name` rules:
             **Do not omit** the incident source in the name.  
@@ -180,11 +202,16 @@ SkillGroups:
               "name": "Databricks Security Breach",
               "sourceType": "INTEGRATION",
               "jurisdictions": [{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}],
-              "autoAssessJurisdictions": true
+              "autoAssessJurisdictions": true,
+              "linkedInventories": {
+                "assets": {
+                  "externalIds": ["Databricks"]
+                }
+              }
             }
             ```
 
-            2. Submit incident payload:
+            3. Submit incident payload:
             Always use the SendToOT child skill with the created incident payload.
               - strigify the payload and use SendToOT child skill with a provided path to submit the incident to OneTrust
 
@@ -194,12 +221,12 @@ SkillGroups:
             Example payload:
             ````json
             {
-              "payload": "{\"incidentTypeName\":\"Unauthorized Disclosure of Information\",\"name\":\"Databricks Security Breach\",\"sourceType\":\"INTEGRATION\",\"jurisdictions\":[{\"countryCode\":\"GBR\"},{\"countryCode\":\"DEU\"},{\"countryCode\":\"GRC\"},{\"countryCode\":\"IRL\"}]}",
+              "payload": "{\"incidentTypeName\":\"Unauthorized Disclosure of Information\",\"name\":\"Databricks Security Breach\",\"sourceType\":\"INTEGRATION\",\"jurisdictions\":[{\"countryCode\":\"GBR\"},{\"countryCode\":\"DEU\"},{\"countryCode\":\"GRC\"},{\"countryCode\":\"IRL\"}],\"autoAssessJurisdictions\": true,\"linkedInventories\":{\"assets\":{\"externalIds\":[\"Databricks\"]}}}",
               "path": "/api/incident/v1/incidents"
             }
             ```
 
-            3. Privacy Breach Analysis:
+            4. Privacy Breach Analysis:
             Perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and always return the analysis to the user.
             </instructions>
 
@@ -213,8 +240,9 @@ SkillGroups:
             </error handling>
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
-          - SendToOT
-          #- sendPrivacyBreachIncidentAlertToOneTrust
+          - SendToOT # logicapp skill name to send the payload to OneTrust
+          - createOrUpdateAsset
+
   - Format: LogicApp
     Skills:
       - Name: SendToOT
@@ -238,3 +266,16 @@ SkillGroups:
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
+#
+# TODO: enable when tenant is allowing to create agent definitions
+# AgentDefinitions:
+# - Name: OneTrustPrivacyBreachResponseAgent
+#   DisplayName: OneTrust Privacy Breach Response Agent
+#   Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+#   Publisher: OneTrust
+#   Product: OneTrust
+#   RequiredSkillsets:
+#   - OneTrustPrivacyBreachAnalysis
+#   - SendToOT
+#   - createOrUpdateAsset
+#   SingleInstance: true

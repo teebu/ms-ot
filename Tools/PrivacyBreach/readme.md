@@ -32,6 +32,11 @@ Sample generated payload sent to OneTrust:
   "name": "Databricks Security Breach",
   "sourceType": "INTEGRATION",
   "jurisdictions": [{ "countryCode": "GBR" }, { "countryCode": "DEU" }, { "countryCode": "GRC" }, { "countryCode": "IRL" }],
-  "autoAssessJurisdictions": true
+  "autoAssessJurisdictions": true,
+  "linkedInventories": {
+    "assets": {
+      "externalIds": ["Databricks"]
+    }
+  }
 }
 ```
