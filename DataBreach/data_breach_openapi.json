@@ -1,0 +1,232 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Incident and Asset API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://uat.onetrust.com"
+    }
+  ],
+  "paths": {
+    "/api/incident/v1/incidents": {
+      "post": {
+        "summary": "Create Incident",
+        "description": "Creates a new incident. The response contains the incidentid.",
+        "operationId": "createIncident",
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["incidentTypeName", "name", "sourceType", "jurisdictions"],
+                "properties": {
+                  "incidentTypeName": {
+                    "type": "string",
+                    "enum": [
+                      "Denial of Service Attack",
+                      "Hoax",
+                      "Intrusion",
+                      "Loss/Theft",
+                      "Misdirected Email",
+                      "Network Scanning/Probing",
+                      "Root Compromise",
+                      "Social Engineering (e.g. Phishing)",
+                      "System Misuse",
+                      "Technical Vulnerability",
+                      "Unauthorized Alteration",
+                      "Unauthorized Disclosure of Information",
+                      "User Account Compromise",
+                      "Virus/Malicious Code",
+                      "Website Defacement"
+                    ],
+                    "example": "Unauthorized Disclosure of Information"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Unsecured Database Exposure - Real Estate Wealth Network"
+                  },
+                  "sourceType": {
+                    "type": "string",
+                    "example": "INTEGRATION"
+                  },
+                  "jurisdictions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "countryCode": {
+                          "type": "string",
+                          "example": "FRA"
+                        },
+                        "stateProvinceCode": {
+                          "type": "string",
+                          "example": "CA"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful creation of incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "incidentid": {
+                      "type": "string",
+                      "example": "12345"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/inventory/v2/inventories/assets/reference/{SourceName}": {
+      "put": {
+        "summary": "Create Asset by External Source Name",
+        "description": "Creates or updates an asset identified by an external Source Name.",
+        "operationId": "createOrUpdateAsset",
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "SourceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "asset-001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "SourceName"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Asset created or updated successfully"
+          }
+        }
+      }
+    },
+    "/api/incident/v1/incidents/{incidentId}/inventory-links/assets": {
+      "post": {
+        "summary": "Link Asset to Incident by External ID",
+        "description": "Links an asset (by external ID) to an incident.",
+        "operationId": "linkAssetToIncident",
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "incidentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "12345"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["externalIds"],
+                "properties": {
+                  "externalIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["asset-001"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Asset linked to incident successfully"
+          }
+        }
+      }
+    },
+    "/api/incident/v1/incidents/{incidentId}/assess-jurisdictions": {
+      "post": {
+        "summary": "Trigger Guidance",
+        "description": "Triggers guidance assessment for the given incident's jurisdictions.",
+        "operationId": "triggerGuidance",
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "incidentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "12345"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guidance triggered successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "x-api-key": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}

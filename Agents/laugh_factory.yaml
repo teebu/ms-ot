@@ -64,8 +64,9 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Using CreateJoke tool about the subject create 5 jokes and return them to the user.
-            Pick the best joke and explain why it was the best to the user.
+            Using **CreateJoke** child skill get 5 jokes on a subject. 
+            Return the 5 jokes you got from **CreateJoke**. 
+            Also choose the **best joke** and display it as best joke and your **reason** for choosing it as the best joke.
             Then submit the best joke using the submitJoke tool.
         ChildSkills:
           - CreateJoke
