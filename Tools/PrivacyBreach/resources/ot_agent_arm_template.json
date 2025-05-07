@@ -3,7 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "logicAppName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "SendToOT"
     },
     "keyVaultName": {
       "type": "string",
