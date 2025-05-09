@@ -11,7 +11,7 @@
       "minLength": 3,
       "maxLength": 24,
       "metadata": {
-        "description": "Globally unique name for the Key Vault. Uses the current resource group name plus '-ot-kv' by default. Must be 3-24 characters, alphanumeric or hyphens, start with a letter, end with a letter or digit."
+        "description": "Globally unique name for the Key Vault"
       }
     },
     "token": {
