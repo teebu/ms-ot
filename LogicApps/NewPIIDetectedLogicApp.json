@@ -1,0 +1,272 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "Microsoft_Sentinel_alert_(just_a_trigger)": {
+                "type": "ApiConnectionWebhook",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuresentinel']['connectionId']"
+                        }
+                    },
+                    "body": {
+                        "callback_url": "@{listCallbackUrl()}"
+                    },
+                    "path": "/subscribe"
+                }
+            }
+        },
+        "actions": {
+            "Get_New_APII_Detect_-_Run_query_and_list_results_V2_(actual_work)": {
+                "runAfter": {},
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuremonitorlogs']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "query": "// Get the two most recent run times and their RecordIds for the trigger rule\nlet LastTwoRunTimes = \n    SentinelHealth\n    | where SentinelResourceName == \"DetectNewAssetswithPII\"\n    | order by TimeGenerated desc\n    | take 2\n    | summarize RunTimes = make_list(pack('TimeGenerated', TimeGenerated, 'RecordId', RecordId))\n    | project RunTimes;\n \n\n// Extract the SecondLastRunTime and its RecordId\nlet SecondLastRun = toscalar(\n    LastTwoRunTimes\n    | project RunTimes[1]\n);\n \n// // Extract the fields from the packed record\n//let SecondLastRunTime = todatetime(SecondLastRun.TimeGenerated);\n//let SecondLastRunRecordId = tostring(SecondLastRun.RecordId);\n\n// TODO: comment out, used for getting actual data\nlet SecondLastRunTime = todatetime('2025-02-08T20:07:40.8245371Z');\n\n// Identify the first instance of a classified asset\nlet minDatePerAsset = PurviewDataSensitivityLogs\n| where ActivityType == \"Classification\"\n| where AssetType in (\"File\", \"Table\")\n| where array_length(Classification) > 0\n//| where Classification has_any (\"US.STATE\", \"PERSONAL.NAME\", \"PERSONAL.US.PHONE_NUMBER\", \"Social Security Number\")\n| summarize minScanTime = min(AssetLastScanTime) by AssetPath;\n// compare if the first instance of a classified asset is after the last run of the Trigger rule\nPurviewDataSensitivityLogs\n| where ActivityType == \"Classification\"\n| join kind=inner (\n    minDatePerAsset\n) on $left.AssetPath == $right.AssetPath and $left.AssetLastScanTime == $right.minScanTime\n| where AssetLastScanTime >= SecondLastRunTime",
+                        "timerangetype": "2",
+                        "timerange": {
+                            "relativeTimeRange": "Last 7 days"
+                        }
+                    },
+                    "path": "/queryDataV2",
+                    "queries": {
+                        "subscriptions": "8a081f00-1372-4400-9886-a704be213b86",
+                        "resourcegroups": "BOND",
+                        "resourcetype": "Log Analytics Workspace",
+                        "resourcename": "BOND"
+                    }
+                }
+            },
+            "For_each": {
+                "foreach": "@body('Get_New_APII_Detect_-_Run_query_and_list_results_V2_(actual_work)')?['value']",
+                "actions": {
+                    "Check_Contact": {
+                        "actions": {
+                            "HTTP_-_get_user_details": {
+                                "type": "Http",
+                                "inputs": {
+                                    "uri": "https://graph.microsoft.com/v1.0/users/@{outputs('Create_Contact_ID').contact_id}",
+                                    "method": "GET",
+                                    "headers": {
+                                        "content-type": "application/json"
+                                    },
+                                    "authentication": {
+                                        "type": "ActiveDirectoryOAuth",
+                                        "tenant": "...",
+                                        "audience": "https://graph.microsoft.com/",
+                                        "clientId": "...",
+                                        "secret": "..."
+                                    }
+                                },
+                                "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                        "transferMode": "Chunked"
+                                    }
+                                }
+                            },
+                            "Set_Contact_Email": {
+                                "runAfter": {
+                                    "HTTP_-_get_user_details": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                    "name": "owner_id",
+                                    "value": {
+                                        "IT_OWNER": "@{coalesce(body('HTTP_-_get_user_details')?.mail, '')}"
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Create_Contact_ID": [
+                                "Succeeded"
+                            ]
+                        },
+                        "else": {
+                            "actions": {}
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "not": {
+                                        "equals": [
+                                            "@outputs('Create_Contact_ID').contact_id",
+                                            ""
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "HTTP_-_get_contact_from_purview": {
+                        "type": "Http",
+                        "inputs": {
+                            "uri": "https://purtoso.purview.azure.com/datamap/api/search/query?api-version=2023-09-01",
+                            "method": "POST",
+                            "headers": {
+                                "content-type": "application/json"
+                            },
+                            "body": {
+                                "keywords": "@{items('For_each').AssetPath}",
+                                "limit": 1
+                            },
+                            "authentication": {
+                                "type": "ActiveDirectoryOAuth",
+                                "tenant": "...",
+                                "audience": "https://purview.azure.net",
+                                "clientId": "...",
+                                "secret": "..."
+                            }
+                        },
+                        "runtimeConfiguration": {
+                            "contentTransfer": {
+                                "transferMode": "Chunked"
+                            }
+                        }
+                    },
+                    "Submit_Payload": {
+                        "actions": {
+                            "HTTP_-_Post_to_Webhook": {
+                                "runAfter": {
+                                    "Payload": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Http",
+                                "inputs": {
+                                    "uri": "https://webhook-test.com/e96a023e303e91eeac7182b8e5badca5",
+                                    "method": "POST",
+                                    "headers": {
+                                        "content-type": "application/json"
+                                    },
+                                    "body": "@outputs('Payload')"
+                                },
+                                "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                        "transferMode": "Chunked"
+                                    }
+                                }
+                            },
+                            "Payload": {
+                                "runAfter": {
+                                    "Parse_Stringified_Fields": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Compose",
+                                "inputs": "@union(\r\n  variables('owner_id'),\r\n  items('For_each'),\r\n  outputs('Parse_Stringified_Fields')\r\n)\r\n"
+                            },
+                            "Parse_Stringified_Fields": {
+                                "type": "Compose",
+                                "inputs": {
+                                    "Classification": "@json(coalesce(items('For_each').Classification, '[]'))",
+                                    "ClassificationDetails": "@json(coalesce(items('For_each').ClassificationDetails, '[]'))"
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Check_Contact": [
+                                "Succeeded"
+                            ]
+                        },
+                        "else": {
+                            "actions": {}
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        true,
+                                        true
+                                    ]
+                                }
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "Create_Contact_ID": {
+                        "runAfter": {
+                            "HTTP_-_get_contact_from_purview": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Compose",
+                        "inputs": {
+                            "contact_id": "@{if(and(not(empty(body('HTTP_-_get_contact_from_purview')?['value'])), not(empty(first(body('HTTP_-_get_contact_from_purview')?['value'])?['contact']))), first(first(body('HTTP_-_get_contact_from_purview')?['value'])?['contact'])?['id'], '')}"
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Initialize_Owner_ID": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            },
+            "Initialize_Owner_ID": {
+                "runAfter": {
+                    "Get_New_APII_Detect_-_Run_query_and_list_results_V2_(actual_work)": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "owner_id",
+                            "type": "object",
+                            "value": {
+                                "IT_OWNER": ""
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "type": "Object",
+                "defaultValue": {}
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "type": "Object",
+            "value": {
+                "azuresentinel": {
+                    "id": "/subscriptions/8a081f00-1372-4400-9886-a704be213b86/providers/Microsoft.Web/locations/eastus/managedApis/azuresentinel",
+                    "connectionId": "/subscriptions/8a081f00-1372-4400-9886-a704be213b86/resourceGroups/BOND/providers/Microsoft.Web/connections/azuresentinel-TestTriggerAlert",
+                    "connectionName": "azuresentinel-TestTriggerAlert",
+                    "connectionProperties": {
+                        "authentication": {
+                            "type": "ManagedServiceIdentity"
+                        }
+                    }
+                },
+                "azuremonitorlogs": {
+                    "id": "/subscriptions/8a081f00-1372-4400-9886-a704be213b86/providers/Microsoft.Web/locations/eastus/managedApis/azuremonitorlogs",
+                    "connectionId": "/subscriptions/8a081f00-1372-4400-9886-a704be213b86/resourceGroups/BOND/providers/Microsoft.Web/connections/azuremonitorlogs",
+                    "connectionName": "azuremonitorlogs",
+                    "connectionProperties": {
+                        "authentication": {
+                            "type": "ManagedServiceIdentity"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
