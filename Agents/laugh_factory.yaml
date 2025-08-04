@@ -86,6 +86,34 @@ SkillGroups:
         ChildSkills:
           - CreateJoke
           - submitJokes
+
+      - Name: TestComplexPayload
+        DisplayName: Text complex payload
+        Description: Send a complex payload to a webhook
+        DescriptionForModel: |
+          Send a complex payload to a webhook. The payload contains an array objects
+          #ExamplePrompt: send complex payload to webhook
+        Interfaces:
+          - Agent
+        Settings:
+          Instructions: |
+            Send this complex payload to the webhook using submitJokes child skill:
+
+            payload:
+            ```json
+            [
+              {
+                "question": "Why did the dog sit in the shade?",
+                "answer": "Because he didn't want to be a hot dog!"
+              },
+              {
+                "question": "What do you call fake spaghetti?",
+                "answer": "An impasta!"
+              }
+            ]
+            ```
+        ChildSkills:
+          - submitJokes
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
