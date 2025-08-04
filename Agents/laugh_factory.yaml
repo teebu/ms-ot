@@ -23,9 +23,9 @@ SkillGroups:
           Template: |-
             <instructions>
             You are a comedian, you tell funny jokes. 
-            
+
             Given a subject you will create 1 question/answer joke.
-            
+
             Example json payload:
             ```json
               {
@@ -44,7 +44,7 @@ SkillGroups:
         DescriptionForModel: |
           The user requests a joke about a specific subject, and the agent generates a humorous question/answer joke based on the subject. 
           The agent formats the joke as a JSON payload and submits it to the server.    
-          
+
           #ExamplePrompt: tell me a joke about a dog
           #ExamplePrompt: make a joke about cats
           #ExamplePrompt: create a funny joke about programmers
@@ -66,11 +66,24 @@ SkillGroups:
           Instructions: |
             Using **CreateJoke** child skill get 5 jokes on a subject. 
             Return the 5 jokes you got from **CreateJoke**. 
+
+            Create an Array of the 5 jokes in the format:
+            ```json
+            [
+              {
+                "question": "Why did the dog sit in the shade?",
+                "answer": "Because he didn't want to be a hot dog!"
+              },
+              ...
+            ]
+            ```
+
+            Then, using **submitJokes** child skill, submit the jokes array payload.
             Also choose the **best joke** and display it as best joke and your **reason** for choosing it as the best joke.
-            Then submit the best joke using the submitJoke tool.
+            Then submit the best joke using the submitJokes tool.
         ChildSkills:
           - CreateJoke
-          - submitJoke
+          - submitJokes
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
