@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Joke Submission API
+  version: 1.0.0
+servers:
+  - url: https://glamorous-teenager-28.webhook.cool
+paths:
+  /submit_joke:
+    post:
+      summary: Submit a new joke
+      description: Submits a joke with a question and answer to the server.
+      operationId: submitJoke
+      requestBody:
+        description: A JSON object containing the joke question and answer.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  example: Why don't scientists trust atoms?
+                answer:
+                  type: string
+                  example: Because they make up everything!
+              required:
+                - question
+                - answer
+              example: 
+                question: "Why did the chicken cross the road?"
+                answer: "To get to the other side!"
+      responses:
+        '200':
+          description: Joke submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Joke received successfully.

@@ -1,0 +1,76 @@
+Descriptor:
+  Name: TheLaughFactory
+  DisplayName: The Laugh Factory
+  Description: This agent creates jokes about a subject and sends them to the server
+
+SkillGroups:
+  # Agents are just another type of skill
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/ComplexPayloadTool/post_openapi.yaml
+  - Format: GPT
+    Skills:
+      - Name: CreateJoke
+        DisplayName: Create Joke
+        Description: Create a joke about a subject
+        Inputs:
+          - Name: subject
+            Description: Subject for the joke
+            DefaultValue: dogs
+            Required: true
+        Settings:
+          ModelName: gpt-4o
+          Template: |-
+            <instructions>
+            You are a comedian, you tell funny jokes. 
+            
+            Given a subject you will create 1 question/answer joke.
+            
+            Example json payload:
+            ```json
+              {
+                "question": "Why did the dog sit in the shade?"
+                "answer": "Because he didn't want to be a hot dog!",
+              }
+            ```
+            <instructions>
+
+            Subject: {{subject}}
+  - Format: Agent
+    Skills:
+      - Name: ComedianAgent
+        DisplayName: Comedian Agent
+        Description: The Comedian Agent creates jokes and submits them to the server.
+        DescriptionForModel: |
+          The user requests a joke about a specific subject, and the agent generates a humorous question/answer joke based on the subject. 
+          The agent formats the joke as a JSON payload and submits it to the server.    
+          
+          #ExamplePrompt: tell me a joke about a dog
+          #ExamplePrompt: make a joke about cats
+          #ExamplePrompt: create a funny joke about programmers
+          #ExamplePrompt: tell me a joke about chickens
+          #ExamplePrompt: make a joke about robots
+          #ExamplePrompt: create a joke about pizza
+          #ExamplePrompt: tell me a joke about teachers
+          #ExamplePrompt: make a joke about cars
+          #ExamplePrompt: create a funny joke about coffee
+          #ExamplePrompt: tell me a joke about bananas
+        Inputs:
+          - Name: subject
+            Description: Subject for the joke
+            DefaultValue: dogs
+            Required: true
+        Interfaces:
+          - Agent
+        Settings:
+          Instructions: |
+            Using **CreateJoke** child skill get 5 jokes on a subject. 
+            Return the 5 jokes you got from **CreateJoke**. 
+            Also choose the **best joke** and display it as best joke and your **reason** for choosing it as the best joke.
+            Then submit the best joke using the submitJoke tool.
+        ChildSkills:
+          - CreateJoke
+          - submitJoke
+    Settings:
+      HistoryPassDownMode: None
+      IncludeSessionHistory: false

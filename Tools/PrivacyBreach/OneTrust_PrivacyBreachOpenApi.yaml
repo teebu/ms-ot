@@ -5,43 +5,115 @@ info:
   version: 1.0.0
 #todo: make endpoint variable?
 paths:
-  /integrationmanager/api/v1/webhook/f10eb14d-9545-4645-9de7-1f3c0d83c821:
-    post:
-      summary: Send Privacy Breach Incident Alert to OneTrust
-      description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
-      operationId: sendPrivacyBreachIncidentAlertToOneTrust
+  /api/inventory/v2/inventories/assets/reference/{SourceName}:
+    put:
+      summary: Create Asset by External Source Name
+      description: Creates or updates an asset identified by an external Source Name.
+      x-ms-cfs-configuration:
+        preview-state: Private
+        preview-start-time: 2025-04-15T00:00:00.0000000
+      operationId: createOrUpdateAsset
+      parameters:
+        - name: SourceName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: asset-001
       requestBody:
-        description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - name
               properties:
                 name:
                   type: string
-                  description: Name of the incident or alert.
-                  example: "Data Leak Alert"
-                description:
-                  type: string
-                  description: Detailed description of the privacy breach.
-                  example: "Sensitive customer data was exposed due to a system misconfiguration."
-                jurisdictions:
-                  type: string
-                  description: A comma-separated list of affected jurisdictions.
-                  example: "France, United Kingdom, Germany"
+                  example: asset-001
       responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Webhook processed successfully"
-        '400':
-          description: Bad request - Invalid input parameters
-        '500':
-          description: Internal server error
+        "200":
+          description: Asset created or updated successfully
+  # /api/incident/v1/incidents:
+  #   post:
+  #     summary: Send Privacy Breach Incident Alert to OneTrust
+  #     description: Sends an priacy breach incident alert with details, including jurisdictions to OneTrust.
+  #     x-ms-cfs-configuration:
+  #       preview-state: Private
+  #       preview-start-time: 2025-04-15T00:00:00.0000000
+  #     operationId: createIncident
+  #     requestBody:
+  #       required: true
+  #       description: A JSON object containing details of the privacy breach, including the name, description, and affected jurisdictions.
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             required:
+  #               - incidentTypeName
+  #               - name
+  #               - sourceType
+  #               - jurisdictions
+  #             properties:
+  #               incidentTypeName:
+  #                 type: string
+  #                 enum:
+  #                   - Denial of Service Attack
+  #                   - Hoax
+  #                   - Intrusion
+  #                   - Loss/Theft
+  #                   - Misdirected Email
+  #                   - Network Scanning/Probing
+  #                   - Root Compromise
+  #                   - Social Engineering (e.g. Phishing)
+  #                   - System Misuse
+  #                   - Technical Vulnerability
+  #                   - Unauthorized Alteration
+  #                   - Unauthorized Disclosure of Information
+  #                   - User Account Compromise
+  #                   - Virus/Malicious Code
+  #                   - Website Defacement
+  #                 example: Unauthorized Disclosure of Information
+  #               name:
+  #                 type: string
+  #                 example: Unsecured Database Exposure - Real Estate Wealth Network
+  #               sourceType:
+  #                 type: string
+  #                 example: INTEGRATION
+  #               jurisdictions:
+  #                 type: array
+  #                 items:
+  #                   type: object
+  #                   properties:
+  #                     countryCode:
+  #                       type: string
+  #                       example: FRA
+  #               autoAssessJurisdictions:
+  #                 type: boolean
+  #                 example: true
+  #               linkedInventories:
+  #                 type: object
+  #                 description: |
+  #                   Inventory link details for the incident.
+  #                 properties:
+  #                   assets:
+  #                     title: InventoryLinkCreationRequest
+  #                     type: object
+  #                     properties:
+  #                       externalIds:
+  #                         type: array
+  #                         description: Set of external identifiers for assets
+  #                         items:
+  #                           type: string
+  #     responses:
+  #       "200":
+  #         description: Successful creation of incident
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 incidentid:
+  #                   type: string
+  #                   example: "12345"

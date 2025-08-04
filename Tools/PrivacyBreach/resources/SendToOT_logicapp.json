@@ -1,0 +1,121 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "manual": {
+        "type": "Request",
+        "kind": "Http",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "payload": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": ["payload", "path"]
+          }
+        }
+      }
+    },
+    "actions": {
+      "Parse_JSON": {
+        "runAfter": {},
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@triggerBody()?['payload']",
+          "schema": {
+            "type": "object"
+          }
+        }
+      },
+      "HTTP": {
+        "runAfter": {
+          "GetSecret-Host": ["Succeeded"]
+        },
+        "type": "Http",
+        "inputs": {
+          "uri": "@{body('GetSecret-Host')?['value']}@{triggerBody()?['path']}",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "@{body('GetSecret-Token')?['value']}"
+          },
+          "body": "@string(body('Parse_JSON'))"
+        },
+        "runtimeConfiguration": {
+          "contentTransfer": {
+            "transferMode": "Chunked"
+          }
+        }
+      },
+      "GetSecret-Token": {
+        "runAfter": {
+          "Parse_JSON": ["Succeeded"]
+        },
+        "type": "Http",
+        "inputs": {
+          "uri": "https://TESTARM-testmyKvOT494.vault.azure.net/secrets/token?api-version=7.2",
+          "method": "GET",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "authentication": {
+            "type": "ManagedServiceIdentity",
+            "audience": "https://vault.azure.net"
+          }
+        },
+        "runtimeConfiguration": {
+          "contentTransfer": {
+            "transferMode": "Chunked"
+          },
+          "secureData": {
+            "properties": ["inputs", "outputs"]
+          }
+        }
+      },
+      "GetSecret-Host": {
+        "runAfter": {
+          "GetSecret-Token": ["Succeeded"]
+        },
+        "type": "Http",
+        "inputs": {
+          "uri": "https://TESTARM-testmyKvOT494.vault.azure.net/secrets/host?api-version=7.2",
+          "method": "GET",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "authentication": {
+            "type": "ManagedServiceIdentity",
+            "audience": "https://vault.azure.net"
+          }
+        },
+        "runtimeConfiguration": {
+          "contentTransfer": {
+            "transferMode": "Chunked"
+          },
+          "secureData": {
+            "properties": ["inputs", "outputs"]
+          }
+        }
+      }
+    },
+    "outputs": {},
+    "parameters": {
+      "$connections": {
+        "type": "Object",
+        "defaultValue": {}
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "value": {}
+    }
+  }
+}
