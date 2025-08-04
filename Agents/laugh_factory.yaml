@@ -64,10 +64,9 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Using **CreateJoke** child skill get 5 jokes on a subject. 
-            Return the 5 jokes you got from **CreateJoke**. 
+            Use the **CreateJoke** child skill to generate 5 jokes about a given subject.
 
-            Create an Array of the 5 jokes in the format:
+            Return the 5 jokes in this array format:
             ```json
             [
               {
@@ -78,9 +77,12 @@ SkillGroups:
             ]
             ```
 
-            Then, using **submitJokes** child skill, submit the jokes array payload.
-            Also choose the **best joke** and display it as best joke and your **reason** for choosing it as the best joke.
-            Then submit the best joke using the submitJokes tool.
+            Then, call the **submitJokes** child skill to submit the full array of 5 jokes.
+
+            Next, select the **best joke** from the list.  
+            - Display the best joke  
+            - Provide a brief **reason** why you chose it
+
         ChildSkills:
           - CreateJoke
           - submitJokes
