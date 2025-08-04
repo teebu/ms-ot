@@ -3,7 +3,7 @@ info:
   title: Joke Submission API
   version: 1.0.0
 servers:
-  - url: https://glamorous-teenager-28.webhook.cool
+  - url: https://arrogant-egypt-83.webhook.cool
 paths:
   /submit_joke:
     post:
@@ -27,11 +27,11 @@ paths:
               required:
                 - question
                 - answer
-              example: 
+              example:
                 question: "Why did the chicken cross the road?"
                 answer: "To get to the other side!"
       responses:
-        '200':
+        "200":
           description: Joke submitted successfully
           content:
             application/json:
