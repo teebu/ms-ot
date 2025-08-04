@@ -81,3 +81,45 @@ paths:
                   message:
                     type: string
                     example: Jokes received successfully.
+  /submit_jokes2:
+  post:
+    summary: Submit a joke with multiple answers
+    description: Submits a joke object containing one question and multiple possible answers.
+    operationId: submitJokes2
+    requestBody:
+      description: A JSON object containing a question and multiple answers.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              question:
+                type: string
+                example: Why did the dog sit in the shade?
+              answers:
+                type: array
+                items:
+                  type: string
+                example:
+                  - "Because he didn't want to be a hot dog!"
+                  - "Because it was too sunny!"
+            required:
+              - question
+              - answers
+          example:
+            question: "Why did the dog sit in the shade?"
+            answers:
+              - "Because he didn't want to be a hot dog!"
+              - "Because it was too sunny!"
+    responses:
+      "200":
+        description: Joke submitted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Joke received successfully.
