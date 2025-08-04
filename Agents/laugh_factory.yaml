@@ -147,7 +147,7 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Send this complex payload to the webhook using submitJokes child skill:
+            Send this complex payload to the webhook using submitJokes2 child skill:
 
             payload:
             ```json
@@ -161,7 +161,7 @@ SkillGroups:
               
             ```
         ChildSkills:
-          - submitJokes
+          - submitJokes2
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
