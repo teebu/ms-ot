@@ -82,7 +82,7 @@ paths:
                     type: string
                     example: Jokes received successfully.
   /submit_jokes2:
-  post:
+    post:
     summary: Submit a joke with multiple answers
     description: Submits a joke object containing one question and multiple possible answers.
     operationId: submitJokes2

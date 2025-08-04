@@ -157,8 +157,7 @@ SkillGroups:
                   "Because he didn't want to be a hot dog!",
                   "Because it was too sunny!"
                 ]
-              },
-              
+              }
             ```
         ChildSkills:
           - submitJokes2
