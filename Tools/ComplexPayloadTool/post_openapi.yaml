@@ -5,7 +5,7 @@ info:
 servers:
   - url: https://arrogant-egypt-83.webhook.cool
 paths:
-  /submit_joke:
+  /submit_jokes:
     post:
       summary: Submit new jokes
       description: Submits one or more jokes (each with a question and answer) to the server.
