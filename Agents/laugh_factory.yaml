@@ -137,9 +137,9 @@ SkillGroups:
         ChildSkills:
           - submitJokes
 
-      - Name: TestComplexPayload2
-        DisplayName: Text complex2 payload
-        Description: Send a complex2 payload to a webhook
+      - Name: TestComplexPayloadTwo
+        DisplayName: Text complex two payload
+        Description: Send a complex two payload to a webhook
         DescriptionForModel: |
           Send a complex2 payload to a webhook. The payload contains an array objects
           #ExamplePrompt: send complex payload to webhook
@@ -147,7 +147,7 @@ SkillGroups:
           - Agent
         Settings:
           Instructions: |
-            Send this complex payload to the webhook using submitJokes2 child skill:
+            Send this complex payload to the webhook using submit_jokes_two child skill:
 
             payload:
             ```json
@@ -160,7 +160,7 @@ SkillGroups:
               }
             ```
         ChildSkills:
-          - submitJokes2
+          - submit_jokes_two
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
