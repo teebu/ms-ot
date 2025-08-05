@@ -240,7 +240,7 @@ SkillGroups:
             </error handling>
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
-          - SendToOT # logicapp skill name to send the payload to OneTrust
+          # - SendToOT # logicapp skill name to send the payload to OneTrust
           - createOrUpdateAsset
           - createIncident
 
