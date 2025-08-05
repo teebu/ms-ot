@@ -27,9 +27,6 @@ paths:
               required:
                 - question
                 - answer
-              example:
-                question: "Why did the chicken cross the road?"
-                answer: "To get to the other side!"
       responses:
         "200":
           description: Joke submitted successfully
@@ -41,6 +38,7 @@ paths:
                   message:
                     type: string
                     example: Joke received successfully.
+
   /submit_jokes:
     post:
       summary: Submit new jokes
@@ -81,11 +79,12 @@ paths:
                   message:
                     type: string
                     example: Jokes received successfully.
-  /submit_jokes2:
+
+  /submit_jokes_two:
     post:
       summary: Submit a joke with multiple answers
       description: Submits a joke object containing one question and multiple possible answers.
-      operationId: submitJokes2
+      operationId: submit_jokes_two
       requestBody:
         description: A JSON object containing a question and multiple answers.
         required: true
@@ -96,22 +95,18 @@ paths:
               properties:
                 question:
                   type: string
-                  example: Why did the dog sit in the shade?
                 answers:
                   type: array
                   items:
                     type: string
-                  example:
-                    - "Because he didn't want to be a hot dog!"
-                    - "Because it was too sunny!"
               required:
                 - question
                 - answers
-            example:
-              question: "Why did the dog sit in the shade?"
-              answers:
-                - "Because he didn't want to be a hot dog!"
-                - "Because it was too sunny!"
+              example:
+                question: "Why did the dog sit in the shade?"
+                answers:
+                  - "Because he didn't want to be a hot dog!"
+                  - "Because it was too sunny!"
       responses:
         "200":
           description: Joke submitted successfully
