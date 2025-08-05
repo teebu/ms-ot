@@ -212,18 +212,18 @@ SkillGroups:
             ```
 
             3. Submit incident payload:
-            Always use the SendToOT child skill with the created incident payload.
-              - strigify the payload and use SendToOT child skill with a provided path to submit the incident to OneTrust
-
-            Always Use these parameters:
-              - path: '/api/incident/v1/incidents'
+            Always use the createIncident child skill with the created incident payload.
+              - send the payload and using createIncident child skill to OneTrust
 
             Example payload:
             ````json
             {
-              "payload": "{\"incidentTypeName\":\"Unauthorized Disclosure of Information\",\"name\":\"Databricks Security Breach\",\"sourceType\":\"INTEGRATION\",\"jurisdictions\":[{\"countryCode\":\"GBR\"},{\"countryCode\":\"DEU\"},{\"countryCode\":\"GRC\"},{\"countryCode\":\"IRL\"}],\"autoAssessJurisdictions\": true,\"linkedInventories\":{\"assets\":{\"externalIds\":[\"Databricks\"]}}}",
-              "path": "/api/incident/v1/incidents"
-            }
+              "incidentTypeName":"Unauthorized Disclosure of Information",
+              "name":"Databricks Security Breach",
+              "sourceType":"INTEGRATION",
+              "jurisdictions":[{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}],"autoAssessJurisdictions": true,
+              "linkedInventories":{"assets":{"externalIds":["Databricks"]}}
+            },
             ```
 
             4. Privacy Breach Analysis:
@@ -242,6 +242,7 @@ SkillGroups:
           - OneTrustPrivacyBreachAnalysis
           - SendToOT # logicapp skill name to send the payload to OneTrust
           - createOrUpdateAsset
+          - createIncident
 
   - Format: LogicApp
     Skills:
