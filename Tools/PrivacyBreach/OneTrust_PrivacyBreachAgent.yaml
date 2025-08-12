@@ -214,16 +214,18 @@ SkillGroups:
             3. Submit incident payload:
             Always use the createIncident child skill with the created incident payload.
               - send the payload and using createIncident child skill to OneTrust
+              - wrap the json payload with a parameter `requestBody` as input for createIncident
 
             Example payload:
-            ````json
+            requestBody=
+            ```json
             {
               "incidentTypeName":"Unauthorized Disclosure of Information",
               "name":"Databricks Security Breach",
               "sourceType":"INTEGRATION",
               "jurisdictions":[{"countryCode":"GBR"},{"countryCode":"DEU"},{"countryCode":"GRC"},{"countryCode":"IRL"}],"autoAssessJurisdictions": true,
               "linkedInventories":{"assets":{"externalIds":["Databricks"]}}
-            },
+            }
             ```
 
             4. Privacy Breach Analysis:
