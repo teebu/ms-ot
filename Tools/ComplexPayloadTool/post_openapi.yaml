@@ -3,7 +3,7 @@ info:
   title: Joke Submission API
   version: 1.0.0
 servers:
-  - url: https://arrogant-egypt-83.webhook.cool
+  - url: https://faithful-cpu-98.webhook.cool
 paths:
   /submit_joke:
     post:
