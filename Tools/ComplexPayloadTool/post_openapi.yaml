@@ -107,6 +107,34 @@ paths:
                 answers:
                   - "Because he didn't want to be a hot dog!"
                   - "Because it was too sunny!"
+  /submit_jokes_three:
+    post:
+      summary: Submit multiple jokes
+      description: Submits a list of jokes, each represented as a single key-value pair where the key is the question and the value is the punchline.
+      operationId: submit_jokes_three
+      requestBody:
+        description: JSON object containing an array of jokes.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jokes:
+                  type: array
+                  description: A list of jokes.
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: An object where the key is the joke question and the value is the punchline.
+              required:
+                - jokes
+            example:
+              jokes:
+                - "Why did the dog sit in the shade?": "Because he didn't want to be a hot dog!"
+                - "Why was the math book sad?": "Because it had too many problems."
+
       responses:
         "200":
           description: Joke submitted successfully

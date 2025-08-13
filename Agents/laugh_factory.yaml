@@ -78,7 +78,8 @@ SkillGroups:
             ```
 
             Then, call the **submitJokes** child skill to submit the full array of 5 jokes.
-            - wrap the json payload with a parameter `requestBody` as input for CreateOneTrustIncident
+            - wrap the json payload with a parameter `requestBody` as input for submitJokes
+
 
             Example payload:
             requestBody=
@@ -136,6 +137,7 @@ SkillGroups:
         Settings:
           Instructions: |
             Send this complex payload to the webhook using submitJokes child skill:
+            - wrap the json payload with a parameter `requestBody` as input for submitJokes
 
             payload:
             ```json
@@ -164,8 +166,10 @@ SkillGroups:
         Settings:
           Instructions: |
             Send this complex payload to the webhook using submit_jokes_two child skill:
+             - wrap the json payload with a parameter `requestBody` as input for submitJokes
 
-            payload:
+            Example payload:
+            requestBody=
             ```json
               {
                 "question": "Why did the dog sit in the shade?",
@@ -177,6 +181,32 @@ SkillGroups:
             ```
         ChildSkills:
           - submit_jokes_two
+
+      - Name: TestComplexPayloadThree
+        DisplayName: Text complex three payload
+        Description: Send a complex three payload to a webhook
+        DescriptionForModel: |
+          Send a complex2 payload to a webhook. The payload contains an array objects
+          #ExamplePrompt: send complex payload to webhook
+        Interfaces:
+          - Agent
+        Settings:
+          Instructions: |
+            Send this complex payload to the webhook using submit_jokes_three child skill:
+             - wrap the json payload with a parameter `requestBody` as input for submit_jokes_three
+
+            Example payload:
+            requestBody=
+            ```json
+            {
+              "jokes": [
+                { "Why did the dog sit in the shade?": "Because he didn't want to be a hot dog!" },
+                { "Why was the math book sad?": "Because it had too many problems." }
+              ]
+            }
+            ```
+        ChildSkills:
+          - submit_jokes_three
     Settings:
       HistoryPassDownMode: None
       IncludeSessionHistory: false
