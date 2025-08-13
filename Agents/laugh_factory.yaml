@@ -188,24 +188,54 @@ SkillGroups:
         DescriptionForModel: |
           Send a complex2 payload to a webhook. The payload contains an array objects
           #ExamplePrompt: send complex payload to webhook
+        Inputs:
+          - Name: subject
+            Description: Subject for the joke
+            DefaultValue: dogs
+            Required: true
         Interfaces:
           - Agent
         Settings:
           Instructions: |
-            Send this complex payload to the webhook using submit_jokes_three child skill:
-             - wrap the json payload with a parameter `requestBody` as input for submit_jokes_three
+            Subject: {{subject}}
 
-            Example payload:
-            requestBody=
+            Use the **CreateJoke** child skill to generate 5 jokes about a given subject.
+
+            Return the 5 jokes in this JSON format:
+
             ```json
             {
               "jokes": [
                 { "Why did the dog sit in the shade?": "Because he didn't want to be a hot dog!" },
-                { "Why was the math book sad?": "Because it had too many problems." }
+                { "What do you call fake spaghetti?": "An impasta!" },
+                { "Why was the math book sad?": "Because it had too many problems." },
+                { "Why don't skeletons fight each other?": "They don't have the guts." },
+                { "Why can't your nose be 12 inches long?": "Because then it would be a foot." }
               ]
             }
             ```
+
+            Then, call the **submit_jokes_three** child skill to submit the full set of 5 jokes.
+
+            * Wrap the JSON payload with a parameter `requestBody` as input for **submit_jokes_three**.
+
+            Example payload:
+
+            ```json
+            requestBody = {
+              "jokes": [
+                { "Why did the dog sit in the shade?": "Because he didn't want to be a hot dog!" },
+                { "What do you call fake spaghetti?": "An impasta!" }
+              ]
+            }
+            ```
+
+            Next, select the **best joke** from the list.
+
+            * Display the best joke in `question: answer` format.
+            * Provide a brief **reason** why you chose it.
         ChildSkills:
+          - createJoke
           - submit_jokes_three
     Settings:
       HistoryPassDownMode: None
