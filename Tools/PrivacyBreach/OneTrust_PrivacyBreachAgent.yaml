@@ -229,7 +229,7 @@ SkillGroups:
             ```
 
             4. Privacy Breach Analysis:
-            Perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and always return the analysis to the user.
+            Perform a Privacy Breach Analysis by calling OneTrustPrivacyBreachAnalysis skill and always return the full analysis and full contact information, not a summary to the user.
             </instructions>
 
             <error handling>
@@ -242,33 +242,8 @@ SkillGroups:
             </error handling>
         ChildSkills:
           - OneTrustPrivacyBreachAnalysis
-          # - SendToOT # logicapp skill name to send the payload to OneTrust
           - createOrUpdateAsset
           - createIncident
-
-  - Format: LogicApp
-    Skills:
-      - Name: SendToOT
-        DisplayName: Send Payload to OneTrust to a specified path
-        Description: This will trigger a LogicApp to send the payload to OneTrust to a specified path
-        DescriptionForModel: |
-          This will trigger a LogicApp to send the payload to OneTrust to a specified path
-          #ExamplePrompt: Send the payload to OneTrust to path
-        Inputs:
-          - Name: payload
-            Description: stringified json payload of the event
-            Required: true
-          - Name: path
-            Description: url endpoint of the payload to use to send data to OneTrust
-            Required: true
-        Settings:
-          SubscriptionId: 8a081f00-1372-4400-9886-a704be213b86
-          ResourceGroup: bond
-          WorkflowName: SendToOT
-          TriggerName: manual
-    Settings:
-      HistoryPassDownMode: None
-      IncludeSessionHistory: false
 #
 # TODO: enable when tenant is allowing to create agent definitions
 # AgentDefinitions:
@@ -279,6 +254,5 @@ SkillGroups:
 #   Product: OneTrust
 #   RequiredSkillsets:
 #   - OneTrustPrivacyBreachAnalysis
-#   - SendToOT
 #   - createOrUpdateAsset
 #   SingleInstance: true
