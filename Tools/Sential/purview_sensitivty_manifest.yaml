@@ -1,0 +1,83 @@
+Descriptor:
+  Name: Get data from Sentinel Graph
+  DisplayName: Sentinel Graph Get data from Sentinel Graph
+  Description: Query Sentinel Graph to get security data
+SkillGroups:
+  - Format: KQL
+    Skills:
+      - Name: GetPurviewLogsFromMSG
+        DisplayName: Get 10 purview data logs results from Sentinel Graph
+        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Settings:
+          Target: SentinelGraph
+          Template: |-
+            UniquePurviewTable_SPRK
+            | take 100
+
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Sentinal/purview_sensitivty_openapi.yaml
+  - Format: Agent
+    Skills:
+      - Name: PurviewLogSubmissionAgent
+        DisplayName: Purview Log Submission Agent
+        Description: The Purview Log Submission Agent retrieves Purview logs from Microsoft Security Graph and submits each item to the webhook for PII processing.
+        DescriptionForModel: |
+          The Purview Log Submission Agent retrieves classification logs using GetPurviewLogsFromMSG and submits each record to the submitPII webhook endpoint for downstream processing.
+          #ExamplePrompt: Retrieve Purview logs and submit all results to the webhook endpoint.
+          #ExamplePrompt: Get Purview classification logs and send each one to submitPII.
+          #ExamplePrompt: Collect Purview logs from MSG and forward to the webhook.
+        Interfaces:
+          - Agent
+        Settings:
+          Instructions: |
+            <role>
+            You are a Purview log submission agent. Your job is to fetch Purview logs via GetPurviewLogsFromMSG and submit each record as-is to the submitPII webhook endpoint.
+            </role>
+
+            <instructions>
+            You will always perform the following tasks:
+
+            1. Purview Log Retrieval:
+              - Always call GetPurviewLogsFromMSG to fetch classification logs.
+
+            2. Iteration:
+              - Loop through all rows in the returned table.
+
+            3. Submission:
+              - For each row, POST the record as JSON to the webhook endpoint using submitPII child skill.
+              - Ensure the full payload is submitted, including Classification and ClassificationDetails fields.
+              - wrap the json payload with a parameter `requestBody` as input for submitPII
+
+            Example:
+            requestBody=
+            ```json
+            {
+              "ExternalID":"SSKSLA15",
+              "ItOwner":"none@na.com",
+              "SourceName":"AzureSqlDatabase12",
+              "SourceType":"Azure SQL Server",
+              "SourceRegion":"Aland Islands",
+              "AssetName":"new_customerdata",
+              "AssetType":"Table",
+              "AssetPath":"mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+              "Classification":["EMAIL"],
+              "ClassificationDetails":[{"label":"EMAIL","confidence":90,"totalCount":1,"count":1}]
+            }
+            ```
+            </instructions>
+
+            <error handling>
+            ERROR HANDLING & VALIDATION GUIDELINES
+
+            Submission Errors:
+              - If webhook call fails, retry once.
+              - If still failing, log which ExternalID failed.
+
+            Data Validation:
+              - Ensure all required fields are present before submission.
+              - If a record is missing critical fields, skip and log the error.
+            </error handling>
+        ChildSkills:
+          - GetPurviewLogsFromMSG
+          - submitPII

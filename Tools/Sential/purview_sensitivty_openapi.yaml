@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: PII Classification Submission API
+  version: 1.0.0
+  description: API for submitting PII classification data to webhook endpoint.
+
+servers:
+  - url: https://faithful-cpu-98.webhook.cool
+
+paths:
+  /submitPII:
+    post:
+      summary: Submit PII classification record
+      operationId: submitPII
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClassificationRecord"
+            example:
+              ExternalID: "SSKSLA15"
+              ItOwner: "none@na.com"
+              SourceName: "AzureSqlDatabase12"
+              SourceType: "Azure SQL Server"
+              SourceRegion: "Aland Islands"
+              AssetName: "new_customerdata"
+              AssetType: "Table"
+              AssetPath: "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata"
+              Classification:
+                - "EMAIL"
+              ClassificationDetails:
+                - label: "EMAIL"
+                  confidence: 90
+                  totalCount: 1
+                  count: 1
+      responses:
+        "200":
+          description: Successfully submitted
+        "400":
+          description: Invalid payload
+        "500":
+          description: Server error
+
+components:
+  schemas:
+    ClassificationDetail:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Classification label
+        confidence:
+          type: integer
+          description: Confidence percentage (0-100)
+        totalCount:
+          type: integer
+        count:
+          type: integer
+      required:
+        - label
+        - confidence
+        - totalCount
+        - count
+
+    ClassificationRecord:
+      type: object
+      properties:
+        ExternalID:
+          type: string
+        ItOwner:
+          type: string
+          format: email
+        SourceName:
+          type: string
+        SourceType:
+          type: string
+        SourceRegion:
+          type: string
+        AssetName:
+          type: string
+        AssetType:
+          type: string
+        AssetPath:
+          type: string
+        Classification:
+          type: array
+          items:
+            type: string
+        ClassificationDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClassificationDetail"
+      required:
+        - ExternalID
+        - SourceName
+        - SourceType
+        - SourceRegion
+        - AssetName
+        - AssetType
+        - AssetPath
+        - Classification
+        - ClassificationDetails
