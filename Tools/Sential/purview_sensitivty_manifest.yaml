@@ -54,15 +54,15 @@ SkillGroups:
             ```json
             {
               "ExternalID":"SSKSLA15",
-              "ItOwner":"none@na.com",
+              "ItOwner":"example@example.com",
               "SourceName":"AzureSqlDatabase12",
               "SourceType":"Azure SQL Server",
-              "SourceRegion":"Aland Islands",
+              "SourceRegion":"eastus",
               "AssetName":"new_customerdata",
               "AssetType":"Table",
               "AssetPath":"mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
-              "Classification":["EMAIL"],
-              "ClassificationDetails":[{"label":"EMAIL","confidence":90,"totalCount":1,"count":1}]
+              "Classification":["MICROSOFT.PERSONAL.EMAIL"],
+              "ClassificationDetails":[{"label":"MICROSOFT.PERSONAL.EMAIL","confidence":90,"totalCount":1,"count":1}]
             }
             ```
             </instructions>

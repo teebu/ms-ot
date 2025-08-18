@@ -19,11 +19,11 @@ paths:
             schema:
               $ref: "#/components/schemas/ClassificationRecord"
             example:
-              ExternalID: "SSKSLA15"
-              ItOwner: "none@na.com"
+              ExternalID: "EXAMPLE123"
+              ItOwner: "example@example.com"
               SourceName: "AzureSqlDatabase12"
               SourceType: "Azure SQL Server"
-              SourceRegion: "Aland Islands"
+              SourceRegion: "useast"
               AssetName: "new_customerdata"
               AssetType: "Table"
               AssetPath: "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata"
