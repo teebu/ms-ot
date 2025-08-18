@@ -12,8 +12,22 @@ SkillGroups:
           Target: SentinelGraph
           Template: |-
             UniquePurviewTable_SPRK
-            | take 2
-
+            | take 10
+  - Format: KQL
+    Skills:
+      - Name: GetEntraUsersFromMSGByID
+        DisplayName: Get Entra user by ID from Sentinel Graph
+        Description: Querying the EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
+        Inputs:
+          - Name: UserID
+            Description: The ID of the Entra user to retrieve
+            Required: true
+        Settings:
+          Target: SentinelGraph
+          Template: |-
+            external_table("EntraUsers")
+            | where id == "{{UserID}}"
+            | summarize arg_max(TimeGenerated, *)
   - Format: API
     Settings:
       OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Sential/purview_sensitivty_openapi.yaml
@@ -36,36 +50,65 @@ SkillGroups:
             </role>
 
             <instructions>
-            You will always perform the following tasks:
+            You will always perform the following tasks for each execution:
 
             1. Purview Log Retrieval:
-              - Always call GetPurviewLogsFromMSG to fetch classification logs.
+              - Call `GetPurviewLogsFromMSG` to fetch classification logs.
+              - Store the returned rows for iteration.
 
-            2. Iteration:
-              - Loop through all rows in the returned table.
+            2. Iteration & Data Enrichment:
+              For each row in the retrieved logs:
+              a. Extract `AssetPath`.
+              b. Call `queryAssetByKeywords` child skill using the `AssetPath`.
+                  - If no asset is found, skip this row and log an error with the AssetPath.
+              c. If asset is found:
+                  - Check the asset's `contact` array for contact information.
+                  - Extract `contact.id` with priority: Owner > Expert.
+                  - If no contact is found, use default email `"nonefound@na.com"` to populate `ItOwner`.
+              d. If `contact.id` is a UUID:
+                  - DO NOT skip.
+                  - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
+                  - Populate `ItOwner` with the email.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `"nonefound@na.com"`.
 
-            3. Submission:
-              - For each row, POST the record as JSON to the webhook endpoint using submitPII child skill.
-              - Ensure the full payload is submitted, including Classification and ClassificationDetails fields.
-              - wrap the json payload with a parameter `requestBody` as input for submitPII
+            3. Payload Preparation:
+              - Include all original fields from the row.
+              - Ensure `Classification` and `ClassificationDetails` fields are preserved.
+              - Wrap the row payload in `requestBody` for submission.
 
-            Example:
+            4. Submission:
+              - Call `submitPII` for each prepared row.
+              - POST the payload to the webhook endpoint.
+              - Ensure submission occurs even if default `ItOwner` is used.
+              - Log successful submission or any errors.
+
+            Example payload:
             requestBody=
             ```json
             {
-              "ExternalID":"SSKSLA15",
-              "ItOwner":"example@example.com",
-              "SourceName":"AzureSqlDatabase12",
-              "SourceType":"Azure SQL Server",
-              "SourceRegion":"eastus",
-              "AssetName":"new_customerdata",
-              "AssetType":"Table",
-              "AssetPath":"mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
-              "Classification":["MICROSOFT.PERSONAL.EMAIL"],
-              "ClassificationDetails":[{"label":"MICROSOFT.PERSONAL.EMAIL","confidence":90,"totalCount":1,"count":1}]
+              "ExternalID": "SSKSLA15",
+              "ItOwner": "example@example.com",
+              "SourceName": "AzureSqlDatabase12",
+              "SourceType": "Azure SQL Server",
+              "SourceRegion": "eastus",
+              "AssetName": "new_customerdata",
+              "AssetType": "Table",
+              "AssetPath": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+              "Classification": ["MICROSOFT.PERSONAL.EMAIL"],
+              "ClassificationDetails": [
+                {"label": "MICROSOFT.PERSONAL.EMAIL", "confidence": 90, "totalCount": 1, "count": 1}
+              ]
             }
-            ```
+            ````
+
+            5. Logging & Error Handling:
+
+              * Log any rows skipped due to missing assets.
+              * Log errors encountered during `GetEntraUsersFromMSGByID` or `submitPII`.
+              * Ensure the loop continues to process all rows regardless of individual failures.
+
             </instructions>
+
 
             <error handling>
             ERROR HANDLING & VALIDATION GUIDELINES
@@ -79,5 +122,8 @@ SkillGroups:
               - If a record is missing critical fields, skip and log the error.
             </error handling>
         ChildSkills:
-          - GetPurviewLogsFromMSG
-          - submitPII
+          - GetPurviewLogsFromMSG # retrieves Purview logs from Microsoft Security Graph
+          - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
+          - submitPII # submits the PII classification record to the webhook endpoint
+          - queryAssetByKeywords # calls purview search API to get asset by keywords
+
