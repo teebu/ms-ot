@@ -12,11 +12,11 @@ SkillGroups:
           Target: SentinelGraph
           Template: |-
             UniquePurviewTable_SPRK
-            | take 100
+            | take 2
 
   - Format: API
     Settings:
-      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Sentinal/purview_sensitivty_openapi.yaml
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Sential/purview_sensitivty_openapi.yaml
   - Format: Agent
     Skills:
       - Name: PurviewLogSubmissionAgent
