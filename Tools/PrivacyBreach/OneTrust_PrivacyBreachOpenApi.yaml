@@ -3,7 +3,7 @@ info:
   title: OneTrust Integration Manager API
   description: API to send privacy breach incident alerts to OneTrust
   version: 1.0.0
-#todo: make endpoint variable?
+
 paths:
   /api/inventory/v2/inventories/assets/reference/{SourceName}:
     put:

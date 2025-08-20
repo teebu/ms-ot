@@ -1,7 +1,7 @@
 Descriptor:
-  Name: Get data from Sentinel Graph
-  DisplayName: Sentinel Graph Get data from Sentinel Graph
-  Description: Query Sentinel Graph to get purview data logs and Entra users by ID
+  Name: PurviewClassificationLogsProcessor
+  DisplayName: Purview Classification Logs Processor
+  Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
 SkillGroups:
   - Format: KQL
     Skills:
