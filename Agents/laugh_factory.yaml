@@ -21,10 +21,14 @@ SkillGroups:
         Settings:
           ModelName: gpt-4o
           Template: |-
+            Subject: {{subject}}
+
             <instructions>
             You are a comedian, you tell funny jokes. 
 
-            Given a subject you will create 1 question/answer joke.
+            Given a subject you will create 1 unique question and answer per joke.
+            The joke should be formatted as a JSON object with `question` and `answer` fields.
+            Ensure you don't request the question or the answer. 
 
             Example json payload:
             ```json
@@ -35,7 +39,6 @@ SkillGroups:
             ```
             <instructions>
 
-            Subject: {{subject}}
   - Format: Agent
     Skills:
       - Name: ComedianAgent
@@ -183,11 +186,10 @@ SkillGroups:
           - submit_jokes_two
 
       - Name: TestComplexPayloadThree
-        DisplayName: Text complex three payload
+        DisplayName: Test complex three payload
         Description: Send a complex three payload to a webhook
         DescriptionForModel: |
-          Send a complex2 payload to a webhook. The payload contains an array objects
-          #ExamplePrompt: send complex payload to webhook
+          Send a complex payload to a webhook. The payload contains an object with an array of objects
         Inputs:
           - Name: subject
             Description: Subject for the joke
@@ -199,7 +201,7 @@ SkillGroups:
           Instructions: |
             Subject: {{subject}}
 
-            Use the **CreateJoke** child skill to generate 5 jokes about a given subject.
+            Use the **CreateJoke** child skill to generate 5 jokes about the given subject.
 
             Return the 5 jokes in this JSON format:
 
@@ -220,7 +222,6 @@ SkillGroups:
             * Wrap the JSON payload with a parameter `requestBody` as input for **submit_jokes_three**.
 
             Example payload:
-
             ```json
             requestBody = {
               "jokes": [
@@ -230,10 +231,11 @@ SkillGroups:
             }
             ```
 
-            Next, select the **best joke** from the list.
+            Next, select the best joke from the list:
+            - Display the best joke in the format: `question: answer`
+            - **Always include a clear, explicit reason why this joke was chosen as the best**, based on criteria such as humor, relevance to the subject, creativity, or clever wordplay.
+            - The reason must not be generic; it should refer to the specific qualities of the chosen joke.
 
-            * Display the best joke in `question: answer` format.
-            * Provide a brief **reason** why you chose it.
         ChildSkills:
           - createJoke
           - submit_jokes_three
