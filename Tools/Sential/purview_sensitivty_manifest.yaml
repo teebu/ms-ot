@@ -2,6 +2,7 @@ Descriptor:
   Name: PurviewClassificationLogsProcessor
   DisplayName: Purview Classification Logs Processor
   Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+
 SkillGroups:
   - Format: KQL
     Skills:
@@ -12,7 +13,7 @@ SkillGroups:
           Target: SentinelGraph
           Template: |-
             UniquePurviewTable_SPRK
-            | take 10
+            | take 1
   - Format: KQL
     Skills:
       - Name: GetEntraUsersFromMSGByID
@@ -46,18 +47,14 @@ SkillGroups:
         Settings:
           Instructions: |
             <role>
-            You are a Purview log submission agent. Your job is to fetch Purview logs via GetPurviewLogsFromMSG and submit each record as-is to the submitPII webhook endpoint.
+            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the submitPII webhook endpoint.
             </role>
 
             <instructions>
             You will always perform the following tasks for each execution:
 
-            1. Purview Log Retrieval:
-              - Call `GetPurviewLogsFromMSG` to fetch classification logs.
-              - Store the returned rows for iteration.
-
-            2. Iteration & Data Enrichment:
-              For each row in the retrieved logs:
+            1. Data Enrichment:
+              With the log record:
               a. Extract `AssetPath`.
               b. Call `queryAssetByKeywords` child skill using the `AssetPath`.
                   - If no asset is found, skip this row and log an error with the AssetPath.
@@ -71,12 +68,12 @@ SkillGroups:
                   - Populate `ItOwner` with the email.
                   - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `"nonefound@na.com"`.
 
-            3. Payload Preparation:
+            2. Payload Preparation:
               - Include all original fields from the row.
               - Ensure `Classification` and `ClassificationDetails` fields are preserved.
               - Wrap the row payload in `requestBody` for submission.
 
-            4. Submission:
+            3. Submission:
               - Call `submitPII` for each prepared row.
               - POST the payload to the webhook endpoint.
               - Ensure submission occurs even if default `ItOwner` is used.
@@ -104,9 +101,7 @@ SkillGroups:
             5. Logging & Error Handling:
 
               * Log any rows skipped due to missing assets.
-              * Log errors encountered during `GetEntraUsersFromMSGByID` or `submitPII`.
-              * Ensure the loop continues to process all rows regardless of individual failures.
-
+              * Log errors encountered during the `submitPII`.
             </instructions>
 
 
@@ -122,8 +117,31 @@ SkillGroups:
               - If a record is missing critical fields, skip and log the error.
             </error handling>
         ChildSkills:
-          - GetPurviewLogsFromMSG # retrieves Purview logs from Microsoft Security Graph
+          #- GetPurviewLogsFromMSG # retrieves Purview logs from Microsoft Security Graph
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - submitPII # submits the PII classification record to the webhook endpoint
           - queryAssetByKeywords # calls purview search API to get asset by keywords
 
+AgentDefinitions:
+  - Name: PurviewClassificationLogsProcessor
+    DisplayName: Purview Classification Logs Processor
+    Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+    Publisher: OneTrust
+    Product: OneTrust
+    RequiredSkillsets:
+      - GetPurviewLogsFromMSG
+      - GetEntraUsersFromMSGByID
+      - PurviewLogSubmissionAgent
+    SingleInstance: false
+    Triggers:
+      - Name: AlertTrigger
+        DisplayName: Alert Trigger
+        Description: Whenever an alert fires
+        DefaultPollPeriodSeconds: 30
+        Settings:
+          - Name: LookbackSeconds
+            Description: Number of seconds to lookback
+            Required: false
+            DefaultValue: 90
+        FetchSkill: PurviewClassificationLogsProcessor.GetPurviewLogsFromMSG
+        ProcessSkill: PurviewClassificationLogsProcessor.PurviewLogSubmissionAgent
