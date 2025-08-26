@@ -129,9 +129,7 @@ AgentDefinitions:
     Publisher: OneTrust
     Product: OneTrust
     RequiredSkillsets:
-      - GetPurviewLogsFromMSG
-      - GetEntraUsersFromMSGByID
-      - PurviewLogSubmissionAgent
+      - PurviewClassificationLogsProcessor
     SingleInstance: false
     Triggers:
       - Name: AlertTrigger
