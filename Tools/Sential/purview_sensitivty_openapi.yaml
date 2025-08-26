@@ -5,7 +5,7 @@ info:
   description: API for submitting PII classification data to webhook endpoint.
 
 servers:
-  - url: https://faithful-cpu-98.webhook.cool
+  - url: https://zealous-shoe-63.webhook.cool
 
 paths:
   /submitPII:
