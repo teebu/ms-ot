@@ -42,6 +42,47 @@ SkillGroups:
           #ExamplePrompt: Retrieve Purview logs and submit all results to the webhook endpoint.
           #ExamplePrompt: Get Purview classification logs and send each one to submitPII.
           #ExamplePrompt: Collect Purview logs from MSG and forward to the webhook.
+        Inputs:
+          - Name: ExternalID
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: ""
+            Required: true
+          - Name: ItOwner
+            Description: Name or identifier of the IT owner responsible for the asset
+            DefaultValue: ""
+            Required: false
+          - Name: SourceName
+            Description: Human-readable name of the source system or dataset
+            DefaultValue: ""
+            Required: true
+          - Name: SourceType
+            Description: Type of source (e.g., database, file share, application, API)
+            DefaultValue: ""
+            Required: true
+          - Name: SourceRegion
+            Description: Geographic or cloud region where the source is located
+            DefaultValue: ""
+            Required: true
+          - Name: AssetName
+            Description: Name of the specific asset being referenced
+            DefaultValue: ""
+            Required: true
+          - Name: AssetType
+            Description: Type of asset (e.g., table, document, storage bucket, endpoint)
+            DefaultValue: ""
+            Required: true
+          - Name: AssetPath
+            Description: Full path or URI to the asset within the source
+            DefaultValue: ""
+            Required: true
+          - Name: Classification
+            Description: High-level data classification (e.g., Confidential, Public, Restricted)
+            DefaultValue: ""
+            Required: true
+          - Name: ClassificationDetails
+            Description: Additional context about the classification, such as specific tags, labels, or sensitivity levels
+            DefaultValue: ""
+            Required: false
         Interfaces:
           - Agent
         Settings:
@@ -57,7 +98,7 @@ SkillGroups:
               With the log record:
               a. Extract `AssetPath`.
               b. Call `queryAssetByKeywords` child skill using the `AssetPath`.
-                  - If no asset is found, skip this row and log an error with the AssetPath.
+                  - If no asset is found, skip this and log an error with the AssetPath.
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
                   - Extract `contact.id` with priority: Owner > Expert.
@@ -69,7 +110,7 @@ SkillGroups:
                   - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `"nonefound@na.com"`.
 
             2. Payload Preparation:
-              - Include all original fields from the row.
+              - Include all original fields from the input.
               - Ensure `Classification` and `ClassificationDetails` fields are preserved.
               - Wrap the row payload in `requestBody` for submission.
 
@@ -130,6 +171,7 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PurviewClassificationLogsProcessor
+      - SearchPurview
     SingleInstance: false
     Triggers:
       - Name: AlertTrigger
