@@ -1,5 +1,5 @@
 Descriptor:
-  Name: Search Purview
+  Name: SearchPurview
   Description: use this plugin to search Purview for an asset by keywords or fqn
   SupportedAuthTypes:
     - OAuthClientCredentialsFlow

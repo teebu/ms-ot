@@ -244,15 +244,14 @@ SkillGroups:
           - OneTrustPrivacyBreachAnalysis
           - createOrUpdateAsset
           - createIncident
-#
-# TODO: enable when tenant is allowing to create agent definitions
-# AgentDefinitions:
-# - Name: OneTrustPrivacyBreachResponseAgent
-#   DisplayName: OneTrust Privacy Breach Response Agent
-#   Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
-#   Publisher: OneTrust
-#   Product: OneTrust
-#   RequiredSkillsets:
-#   - OneTrustPrivacyBreachAnalysis
-#   - createOrUpdateAsset
-#   SingleInstance: true
+
+AgentDefinitions:
+  - Name: OneTrustPrivacyBreachResponseAgent
+    DisplayName: OneTrust Privacy Breach Response Agent
+    Description: The OneTrust Privacy Breach Response Agent provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+    Publisher: OneTrust
+    Product: OneTrust
+    RequiredSkillsets:
+      - OneTrustPrivacyBreachAnalysis
+      - createOrUpdateAsset
+    SingleInstance: true
