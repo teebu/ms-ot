@@ -1,6 +1,6 @@
 Descriptor:
   Name: PurviewAPI
-  Description: use this plugin to search Purview for an asset by keywords or fqn
+  Description: Purview API for searching assets by keywords or FQN
   SupportedAuthTypes:
     - OAuthClientCredentialsFlow
   Authorization:
