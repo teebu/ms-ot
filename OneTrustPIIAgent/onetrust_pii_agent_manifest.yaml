@@ -43,8 +43,8 @@ SkillGroups:
           Template: |-
             UniquePurviewTable_SPRK
             | where RowID > coalesce(tolong("{{LastRowID}}"), 0)
-            | sort by TimeGenerated asc
-            | take 1
+            | sort by RowID asc
+            | take 3
 
   - Format: KQL
     Skills:
