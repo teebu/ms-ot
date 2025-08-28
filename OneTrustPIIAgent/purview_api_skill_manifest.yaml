@@ -1,5 +1,5 @@
 Descriptor:
-  Name: SearchPurview
+  Name: PurviewAPI
   Description: use this plugin to search Purview for an asset by keywords or fqn
   SupportedAuthTypes:
     - OAuthClientCredentialsFlow
@@ -8,8 +8,18 @@ Descriptor:
     TokenEndpoint: https://login.microsoftonline.com/714a1b55-6ae7-46e7-aa08-8978b2c8746c/oauth2/token
     Scopes: Read
     AuthorizationContentType: application/x-www-form-urlencoded
+  Settings:
+    - Name: PurviewEndpoint
+      Label: Purview Endpoint
+      Description: The fully qualified host name for your Purview account.
+      HintText: "https://example.purview.azure.com"
+      DefaultValue: "https://<example>.purview.azure.com"
+      SettingType: String
+      Required: true
 
 SkillGroups:
   - Format: API
     Settings:
+      # todo update url when available
       OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/purviewOpenAPI.yaml
+      EndpointUrlSettingName: PurviewEndpoint

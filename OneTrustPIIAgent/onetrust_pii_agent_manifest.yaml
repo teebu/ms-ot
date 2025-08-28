@@ -3,17 +3,49 @@ Descriptor:
   DisplayName: Purview Classification Logs Processor
   Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
 
+AgentDefinitions:
+  - Name: PurviewClassificationLogsProcessor
+    DisplayName: Purview Classification Logs Processor
+    Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+    Publisher: OneTrust
+    Product: OneTrust
+    RequiredSkillsets:
+      - PurviewClassificationLogsProcessor
+      - PurviewAPI
+      - OneTrustPIIDataAPI
+    SingleInstance: false
+    Triggers:
+      - Name: PurviewLogTrigger
+        DisplayName: PurviewLog Trigger
+        Description: PurviewLog Classification Trigger to begin processing logs from Sentinel Graph
+        DefaultPollPeriodSeconds: 30
+        Settings:
+          - Name: LookbackSeconds
+            Description: Number of seconds to lookback
+            Required: false
+            DefaultValue: 90
+        FetchSkill: PurviewClassificationLogsProcessor.GetPurviewLogsFromMSG
+        ProcessSkill: PurviewClassificationLogsProcessor.PurviewLogSubmissionAgent
+
 SkillGroups:
   - Format: KQL
     Skills:
       - Name: GetPurviewLogsFromMSG
         DisplayName: Get 10 purview data logs results from Sentinel Graph
         Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Inputs:
+          - Name: LastRowID
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: "0"
+            Required: false
         Settings:
           Target: SentinelGraph
           Template: |-
             UniquePurviewTable_SPRK
-            | take 1
+            | where RowID > coalesce(tolong("{{LastRowID}}"), 0)
+            | sort by TimeGenerated asc
+            | take 3
+
   - Format: KQL
     Skills:
       - Name: GetEntraUsersFromMSGByID
@@ -29,19 +61,11 @@ SkillGroups:
             external_table("EntraUsers")
             | where id == "{{UserID}}"
             | summarize arg_max(TimeGenerated, *)
-  - Format: API
-    Settings:
-      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/Sential/purview_sensitivty_openapi.yaml
   - Format: Agent
     Skills:
       - Name: PurviewLogSubmissionAgent
         DisplayName: Purview Log Submission Agent
         Description: The Purview Log Submission Agent retrieves Purview logs from Microsoft Security Graph and submits each item to the webhook for PII processing.
-        DescriptionForModel: |
-          The Purview Log Submission Agent retrieves classification logs using GetPurviewLogsFromMSG and submits each record to the submitPII webhook endpoint for downstream processing.
-          #ExamplePrompt: Retrieve Purview logs and submit all results to the webhook endpoint.
-          #ExamplePrompt: Get Purview classification logs and send each one to submitPII.
-          #ExamplePrompt: Collect Purview logs from MSG and forward to the webhook.
         Inputs:
           - Name: ExternalID
             Description: Unique identifier assigned externally for tracking the asset or data source
@@ -102,12 +126,12 @@ SkillGroups:
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
                   - Extract `contact.id` with priority: Owner > Expert.
-                  - If no contact is found, use default email `"nonefound@na.com"` to populate `ItOwner`.
+                  - If no contact is found, use default email `null` to populate `ItOwner`.
               d. If `contact.id` is a UUID:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `"nonefound@na.com"`.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `null`.
 
             2. Payload Preparation:
               - Include all original fields from the input.
@@ -115,7 +139,7 @@ SkillGroups:
               - Wrap the row payload in `requestBody` for submission.
 
             3. Submission:
-              - Call `submitPII` for each prepared row.
+              - Call `submitPII` for the log record.
               - POST the payload to the webhook endpoint.
               - Ensure submission occurs even if default `ItOwner` is used.
               - Log successful submission or any errors.
@@ -158,30 +182,7 @@ SkillGroups:
               - If a record is missing critical fields, skip and log the error.
             </error handling>
         ChildSkills:
-          #- GetPurviewLogsFromMSG # retrieves Purview logs from Microsoft Security Graph
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - submitPII # submits the PII classification record to the webhook endpoint
           - queryAssetByKeywords # calls purview search API to get asset by keywords
 
-AgentDefinitions:
-  - Name: PurviewClassificationLogsProcessor
-    DisplayName: Purview Classification Logs Processor
-    Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
-    Publisher: OneTrust
-    Product: OneTrust
-    RequiredSkillsets:
-      - PurviewClassificationLogsProcessor
-      - SearchPurview
-    SingleInstance: false
-    Triggers:
-      - Name: AlertTrigger
-        DisplayName: Alert Trigger
-        Description: Whenever an alert fires
-        DefaultPollPeriodSeconds: 30
-        Settings:
-          - Name: LookbackSeconds
-            Description: Number of seconds to lookback
-            Required: false
-            DefaultValue: 90
-        FetchSkill: PurviewClassificationLogsProcessor.GetPurviewLogsFromMSG
-        ProcessSkill: PurviewClassificationLogsProcessor.PurviewLogSubmissionAgent
