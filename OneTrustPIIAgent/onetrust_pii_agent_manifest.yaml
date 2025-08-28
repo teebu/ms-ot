@@ -44,7 +44,7 @@ SkillGroups:
             UniquePurviewTable_SPRK
             | where RowID > coalesce(tolong("{{LastRowID}}"), 0)
             | sort by TimeGenerated asc
-            | take 3
+            | take 1
 
   - Format: KQL
     Skills:
@@ -126,12 +126,12 @@ SkillGroups:
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
                   - Extract `contact.id` with priority: Owner > Expert.
-                  - If no contact is found, use default email `null` to populate `ItOwner`.
+                  - If no contact is found, use default email `notfound@ignore.this.com` to populate `ItOwner`.
               d. If `contact.id` is a UUID:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `null`.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `notfound@ignore.this.com`.
 
             2. Payload Preparation:
               - Include all original fields from the input.
