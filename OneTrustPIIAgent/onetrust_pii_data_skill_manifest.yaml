@@ -20,5 +20,5 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://github.com/teebu/ms-ot/blob/main/OneTrustPIIAgent/onetrust_pii_data_openapi.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/onetrust_pii_data_openapi.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl

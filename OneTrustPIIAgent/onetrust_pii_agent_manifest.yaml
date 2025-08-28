@@ -1,16 +1,16 @@
 Descriptor:
-  Name: PurviewClassificationLogsProcessor
-  DisplayName: Purview Classification Logs Processor
+  Name: OneTrustPurviewLogAgent
+  DisplayName: OneTrust Purview Log Agent
   Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
 
 AgentDefinitions:
-  - Name: PurviewClassificationLogsProcessor
+  - Name: OneTrustPurviewLogAgent
     DisplayName: Purview Classification Logs Processor
     Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
     Publisher: OneTrust
     Product: OneTrust
     RequiredSkillsets:
-      - PurviewClassificationLogsProcessor
+      - OneTrustPurviewLogAgent
       - PurviewAPI
       - OneTrustDDAPI
     SingleInstance: false
@@ -24,8 +24,8 @@ AgentDefinitions:
             Description: Number of seconds to lookback
             Required: false
             DefaultValue: 90
-        FetchSkill: PurviewClassificationLogsProcessor.GetPurviewLogsFromMSG
-        ProcessSkill: PurviewClassificationLogsProcessor.PurviewLogSubmissionAgent
+        FetchSkill: OneTrustPurviewLogAgent.GetPurviewLogsFromMSG
+        ProcessSkill: OneTrustPurviewLogAgent.PurviewLogSubmissionAgent
 
 SkillGroups:
   - Format: KQL
