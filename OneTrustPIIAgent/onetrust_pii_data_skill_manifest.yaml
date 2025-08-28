@@ -1,5 +1,5 @@
 Descriptor:
-  Name: OneTrustPIIDataAPI
+  Name: OneTrustDDAPI
   Description: Use this plugin to submit data to OneTrust Data Discovery for PII detection and classification
   SupportedAuthTypes:
     - ApiKey
@@ -20,6 +20,5 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      # todo: update url when available
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/purviewOpenAPI.yaml
+      OpenApiSpecURL: https://github.com/teebu/ms-ot/blob/main/OneTrustPIIAgent/onetrust_pii_data_openapi.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl

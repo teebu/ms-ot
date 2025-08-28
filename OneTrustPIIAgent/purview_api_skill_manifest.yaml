@@ -20,6 +20,5 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      # todo update url when available
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PIIDataDetector/purviewOpenAPI.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/purview_api_skill_openapi.yaml
       EndpointUrlSettingName: PurviewEndpoint

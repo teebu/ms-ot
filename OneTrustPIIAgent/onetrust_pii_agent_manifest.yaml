@@ -12,7 +12,7 @@ AgentDefinitions:
     RequiredSkillsets:
       - PurviewClassificationLogsProcessor
       - PurviewAPI
-      - OneTrustPIIDataAPI
+      - OneTrustDDAPI
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger
@@ -112,7 +112,7 @@ SkillGroups:
         Settings:
           Instructions: |
             <role>
-            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the submitPII webhook endpoint.
+            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the scanData webhook endpoint.
             </role>
 
             <instructions>
@@ -139,7 +139,7 @@ SkillGroups:
               - Wrap the row payload in `requestBody` for submission.
 
             3. Submission:
-              - Call `submitPII` for the log record.
+              - Call `scanData` for the log record.
               - POST the payload to the webhook endpoint.
               - Ensure submission occurs even if default `ItOwner` is used.
               - Log successful submission or any errors.
@@ -166,7 +166,7 @@ SkillGroups:
             5. Logging & Error Handling:
 
               * Log any rows skipped due to missing assets.
-              * Log errors encountered during the `submitPII`.
+              * Log errors encountered during the `scanData`.
             </instructions>
 
 
@@ -183,6 +183,6 @@ SkillGroups:
             </error handling>
         ChildSkills:
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
-          - submitPII # submits the PII classification record to the webhook endpoint
+          - scanData # submits the PII classification record to endpoint
           - queryAssetByKeywords # calls purview search API to get asset by keywords
 

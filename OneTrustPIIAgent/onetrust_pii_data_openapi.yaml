@@ -8,10 +8,10 @@ info:
 #   - url: https://zealous-shoe-63.webhook.cool
 
 paths:
-  /submitPII:
+  /api/discovery-platform/v1/scan-data:
     post:
-      summary: Submit PII classification record
-      operationId: submitPII
+      summary: Submit scan data for PII classification
+      operationId: scanData
       requestBody:
         required: true
         content:
