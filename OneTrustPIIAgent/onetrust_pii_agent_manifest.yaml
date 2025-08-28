@@ -5,7 +5,7 @@ Descriptor:
 
 AgentDefinitions:
   - Name: OneTrustPurviewLogAgent
-    DisplayName: Purview Classification Logs Processor
+    DisplayName: OneTrust Purview Log Agent
     Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
     Publisher: OneTrust
     Product: OneTrust
