@@ -2,6 +2,7 @@ Descriptor:
   Name: OneTrustPurviewLogAgent
   DisplayName: OneTrust Purview Log Agent
   Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+  Icon: https://www.onetrust.com/favicon.svg
 
 AgentDefinitions:
   - Name: OneTrustPurviewLogAgent
@@ -34,16 +35,16 @@ SkillGroups:
         DisplayName: Get 10 purview data logs results from Sentinel Graph
         Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
         Inputs:
-          - Name: LastRowID
+          - Name: LastTimeGenerated
             Description: Unique identifier assigned externally for tracking the asset or data source
-            DefaultValue: "0"
+            DefaultValue: "1900-01-01"
             Required: false
         Settings:
           Target: SentinelGraph
           Template: |-
             UniquePurviewTable_SPRK
-            | where RowID > coalesce(tolong("{{LastRowID}}"), 0)
-            | sort by RowID asc
+            | where TimeGenerated > coalesce(todatetime("{{LastTimeGenerated}}"), datetime(1900-01-01))
+            | order by TimeGenerated asc
             | take 3
 
   - Format: KQL

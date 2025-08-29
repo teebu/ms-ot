@@ -1,6 +1,12 @@
 Descriptor:
   Name: PurviewAPI
   Description: Purview API for searching assets by keywords or FQN
+  # SupportedAuthTypes:
+  #   - AAD
+  # Authorization:
+  #   Type: AAD
+  #   EntraScopes: https://purview.azure.net/.default
+
   SupportedAuthTypes:
     - OAuthClientCredentialsFlow
   Authorization:
@@ -8,6 +14,7 @@ Descriptor:
     TokenEndpoint: https://login.microsoftonline.com/714a1b55-6ae7-46e7-aa08-8978b2c8746c/oauth2/token
     Scopes: Read
     AuthorizationContentType: application/x-www-form-urlencoded
+
   Settings:
     - Name: PurviewEndpoint
       Label: Purview Endpoint

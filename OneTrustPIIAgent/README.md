@@ -9,6 +9,5 @@
 
 # Notebook:
 
-1. deploy notebook?
-   -> set workspace_name?
-   -> create cron job?
+1. deploy notebook (packager?)
+   -> create cron job
