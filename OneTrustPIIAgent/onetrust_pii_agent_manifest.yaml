@@ -45,7 +45,7 @@ SkillGroups:
             UniquePurviewTable_SPRK
             | where TimeGenerated > coalesce(todatetime("{{LastTimeGenerated}}"), datetime(1900-01-01))
             | order by TimeGenerated asc
-            | take 3
+            | take 5
 
   - Format: KQL
     Skills:
@@ -69,6 +69,10 @@ SkillGroups:
         Description: The Purview Log Submission Agent retrieves Purview logs from Microsoft Security Graph and submits each item to the webhook for PII processing.
         Inputs:
           - Name: ExternalID
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: ""
+            Required: true
+          - Name: Id
             Description: Unique identifier assigned externally for tracking the asset or data source
             DefaultValue: ""
             Required: true
