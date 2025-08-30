@@ -10,4 +10,4 @@
 # Notebook:
 
 1. deploy notebook (packager?)
-   -> create cron job
+   -> create cron job - what should the end time be? how does publisher figure it out / update it?.
