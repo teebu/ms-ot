@@ -1,6 +1,6 @@
 Descriptor:
   Name: OneTrustDDAPI
-  Description: Use this plugin to submit data to OneTrust Data Discovery for PII detection and classification
+  Description: This plugin submits data to OneTrust Data Discovery
   # SupportedAuthTypes:
   #   - ApiKey
   # Authorization:
