@@ -85,7 +85,7 @@ SkillGroups:
             DefaultValue: ""
             Required: true
           - Name: SourceType
-            Description: Type of source (e.g., database, file share, application, API)
+            Description: Type of source (e.g., Azure SQL Database, Snowflake)
             DefaultValue: ""
             Required: true
           - Name: SourceRegion
@@ -105,13 +105,13 @@ SkillGroups:
             DefaultValue: ""
             Required: true
           - Name: Classification
-            Description: High-level data classification (e.g., Confidential, Public, Restricted)
+            Description: High-level data classification
             DefaultValue: ""
             Required: true
           - Name: ClassificationDetails
             Description: Additional context about the classification, such as specific tags, labels, or sensitivity levels
             DefaultValue: ""
-            Required: false
+            Required: true
         Interfaces:
           - Agent
         Settings:
@@ -138,10 +138,9 @@ SkillGroups:
                   - Populate `ItOwner` with the email.
                   - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `notfound@ignore.this.com`.
 
-            2. Payload Preparation:
-              - Include all original fields from the input.
-              - Ensure `Classification` and `ClassificationDetails` fields are preserved.
-              - Wrap the row payload in `requestBody` for submission.
+            2. Payload Preparation Instructions:
+              - Ensure Classification and ClassificationDetails remain unchanged.
+              - Wrap the resulting row payload inside a requestBody object.
 
             3. Submission:
               - Call `scanData` for the log record.
@@ -153,17 +152,24 @@ SkillGroups:
             requestBody=
             ```json
             {
-              "ExternalID": "SSKSLA15",
-              "ItOwner": "example@example.com",
-              "SourceName": "AzureSqlDatabase12",
+              "Id": "3d9df521e29f613b27d8cd9968cf54223a106a951387eee7b603f1eac30113b1",
+              "ItOwner": "example@example.com"
+              "ExternalID": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+              "SourceName": "AzureSqlDatabase-Crl",
               "SourceType": "Azure SQL Server",
-              "SourceRegion": "eastus",
-              "AssetName": "new_customerdata",
+              "AssetName": "CustomerFlights40",
               "AssetType": "Table",
               "AssetPath": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
-              "Classification": ["MICROSOFT.PERSONAL.EMAIL"],
+              "Classification": [
+                "MICROSOFT.PERSONAL.EMAIL",
+              ],
               "ClassificationDetails": [
-                {"label": "MICROSOFT.PERSONAL.EMAIL", "confidence": 90, "totalCount": 1, "count": 1}
+                {
+                  "Name": "MICROSOFT.PERSONAL.EMAIL",
+                  "Confidence": 86,
+                  "Count": 1,
+                  "UniqueCount": 1
+                }
               ]
             }
             ````
@@ -190,4 +196,3 @@ SkillGroups:
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - scanData # submits the PII classification record to endpoint
           - queryAssetByKeywords # calls purview search API to get asset by keywords
-
