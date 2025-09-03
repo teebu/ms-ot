@@ -1,0 +1,26 @@
+Descriptor:
+  Name: OneTrustPrivacyBreachResponse_API
+  DisplayName: OneTrust Privacy Breach Response via API plugin
+  Description: The OneTrust Privacy Breach Response API plugin provides guidance on notification requirements based on regulatory obligations when personal data is involved in a breach
+  Icon: https://www.onetrust.com/favicon.svg
+  SupportedAuthTypes:
+    - ApiKey
+  Authorization:
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: "Bearer"
+  Settings:
+    - Name: OneTrustOrganizationUrl
+      Label: Onetrust API URL for Organizations
+      Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+      HintText: "https://myorganization.onetrust.com"
+      DefaultValue: "https://<myorganization>.onetrust.com"
+      SettingType: String
+      Required: true
+
+SkillGroups:
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/Tools/PrivacyBreach/OneTrust_PrivacyBreachOpenApi.yaml
+      EndpointUrlSettingName: OneTrustOrganizationUrl
