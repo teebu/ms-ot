@@ -1,17 +1,17 @@
 Descriptor:
-  Name: OneTrustPurviewLogAgent
-  DisplayName: OneTrust Purview Log Agent
-  Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+  Name: PrivacyRiskAgent
+  DisplayName: Privacy Risk Agent
+  Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
   Icon: https://www.onetrust.com/favicon.svg
 
 AgentDefinitions:
-  - Name: OneTrustPurviewLogAgent
-    DisplayName: OneTrust Purview Log Agent
-    Description: Retrieve Purview sensitivity logs from Sentinel Graph and use the PII agent to enrich each record with Entra user information by ID.
+  - Name: PrivacyRiskAgent
+    DisplayName: Privacy Risk Agent
+    Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
     Publisher: OneTrust
     Product: OneTrust
     RequiredSkillsets:
-      - OneTrustPurviewLogAgent
+      - PrivacyRiskAgent
       - PurviewAPI
       - OneTrustDDAPI
     SingleInstance: false
@@ -25,8 +25,8 @@ AgentDefinitions:
             Description: Number of seconds to lookback
             Required: false
             DefaultValue: 90
-        FetchSkill: OneTrustPurviewLogAgent.GetPurviewLogsFromMSG
-        ProcessSkill: OneTrustPurviewLogAgent.PurviewLogSubmissionAgent
+        FetchSkill: PrivacyRiskAgent.GetPurviewLogsFromMSG
+        ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
 
 SkillGroups:
   - Format: KQL
@@ -152,11 +152,11 @@ SkillGroups:
             requestBody=
             ```json
             {
-              "Id": "3d9df521e29f613b27d8cd9968cf54223a106a951387eee7b603f1eac30113b1",
               "ItOwner": "example@example.com"
               "ExternalID": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
               "SourceName": "AzureSqlDatabase-Crl",
               "SourceType": "Azure SQL Server",
+              "SourceRegion": "United States",
               "AssetName": "CustomerFlights40",
               "AssetType": "Table",
               "AssetPath": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
