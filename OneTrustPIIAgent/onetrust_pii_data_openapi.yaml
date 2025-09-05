@@ -19,7 +19,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ClassificationRecord"
             example:
-              AssetPath: "mssql://bondsql.database.windows.net/CustomerDB/dbo/CustomerFlights14"
+              AssetPath: "mssql://sample.database.windows.net/CustomerDB/dbo/CustomerFlights14"
               Classification:
                 - "MICROSOFT.PERSONAL.EMAIL"
               ClassificationDetails:
@@ -29,7 +29,7 @@ paths:
                   UniqueCount: 1
               TimeGenerated: "2025-09-02T19:10:09.302577Z"
               Id: "2ea339274edbb31b242eb19e284f58bc77ab52dd9fa870e123fe1108b1efbdfe"
-              ExternalID: "mssql://bondsql.database.windows.net/CustomerDB/dbo/CustomerFlights14"
+              ExternalID: "mssql://sample.database.windows.net/CustomerDB/dbo/CustomerFlights14"
               SourceName: "AzureSqlDatabase-Crl"
               SourceType: "Azure SQL Server"
               SourceRegion: "United States"
