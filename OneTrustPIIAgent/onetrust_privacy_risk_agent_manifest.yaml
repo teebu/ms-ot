@@ -25,7 +25,6 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PrivacyRiskAgent
-      - PurviewAPI
       - OneTrustDDAPI
     SingleInstance: false
     Triggers:
@@ -153,7 +152,7 @@ SkillGroups:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, populate `ItOwner` with default `notfound@ignore.this.com`.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
 
             2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.
