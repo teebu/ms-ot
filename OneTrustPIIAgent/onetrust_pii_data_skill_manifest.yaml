@@ -1,24 +1,24 @@
 Descriptor:
   Name: OneTrustDDAPI
   Description: This plugin submits data to OneTrust Data Discovery
-  # SupportedAuthTypes:
-  #   - ApiKey
-  # Authorization:
-  #   Type: APIKey
-  #   Key: Authorization
-  #   Location: Header
-  #   AuthScheme: "Bearer"
-  # Settings:
-  #   - Name: OneTrustOrganizationUrl
-  #     Label: Onetrust API URL for Organizations
-  #     Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
-  #     HintText: "https://example.onetrust.com"
-  #     DefaultValue: "https://<organization>.onetrust.com"
-  #     SettingType: String
-  #     Required: true
+  SupportedAuthTypes:
+    - ApiKey
+  Authorization:
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: "Bearer"
+  Settings:
+    - Name: OneTrustOrganizationUrl
+      Label: Onetrust API URL for Organizations
+      Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+      HintText: "https://example.onetrust.com"
+      DefaultValue: "https://<organization>.onetrust.com"
+      SettingType: String
+      Required: true
 
 SkillGroups:
   - Format: API
     Settings:
       OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/onetrust_pii_data_openapi.yaml
-      #EndpointUrlSettingName: OneTrustOrganizationUrl
+      EndpointUrlSettingName: OneTrustOrganizationUrl
