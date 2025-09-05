@@ -4,9 +4,6 @@ info:
   version: 1.1.0
   description: API for submitting PII classification data to webhook endpoint.
 
-servers:
-  - url: https://zealous-shoe-63.webhook.cool
-
 paths:
   /api/discovery-platform/v1/scan-data:
     post:
