@@ -152,7 +152,7 @@ SkillGroups:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default to `null` value.
 
             2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.
