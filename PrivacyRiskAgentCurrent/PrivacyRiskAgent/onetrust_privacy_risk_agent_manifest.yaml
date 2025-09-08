@@ -43,7 +43,7 @@ AgentDefinitions:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/purview_api_skill_openapi.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgentCurrent/PrivacyRiskAgent/purview_api_skill_openapi.yaml
       EndpointUrlSettingName: PurviewEndpoint
   - Format: KQL
     Skills:
