@@ -20,10 +20,16 @@ paths:
                 keywords:
                   type: string
                   description: The fully qualified name (FQN) of the asset.
+                limits:
+                  type: integer
+                  description: The maximum number of results to return.
+                  default: 1
               required:
                 - keywords
+                - limits
               example:
                 keywords: "your-asset-fqn"
+                limits: 1
       responses:
         "200":
           description: Successful query response.
