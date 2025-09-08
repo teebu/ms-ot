@@ -144,7 +144,7 @@ SkillGroups:
             1. Data Enrichment:
               With the log record:
               a. Extract `AssetPath`.
-              b. Call `queryAssetByKeywords` child skill using the `AssetPath` and `limit=1` to find the corresponding asset in Purview.
+              b. Call `queryAssetByKeywords` child skill passing the value of `AssetPath` to `keywords` and `limit=1` to find the corresponding asset in Purview.
                   - If no asset is found, skip this and log an error with the AssetPath.
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
