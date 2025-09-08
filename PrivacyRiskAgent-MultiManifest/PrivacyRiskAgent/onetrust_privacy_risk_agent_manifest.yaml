@@ -1,0 +1,215 @@
+Descriptor:
+  Name: PrivacyRiskAgent
+  DisplayName: Privacy Risk Agent
+  Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
+  Icon: https://www.onetrust.com/favicon.svg
+  SupportedAuthTypes:
+    - AADDelegated
+  Authorization:
+    Type: AADDelegated
+    EntraScopes: https://purview.azure.net/.default
+  Settings:
+    - Name: PurviewEndpoint
+      Label: Purview Endpoint
+      Description: The fully qualified host name for your Purview account.
+      HintText: "https://example.purview.azure.com"
+      DefaultValue: "https://<example>.purview.azure.com"
+      SettingType: String
+      Required: true
+
+AgentDefinitions:
+  - Name: PrivacyRiskAgent
+    DisplayName: Privacy Risk Agent
+    Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
+    Publisher: OneTrust
+    Product: OneTrust
+    RequiredSkillsets:
+      - PrivacyRiskAgent
+      - OneTrustDDAPI
+    SingleInstance: false
+    Triggers:
+      - Name: PurviewLogTrigger
+        DisplayName: PurviewLog Trigger
+        Description: PurviewLog Classification Trigger to begin processing logs from Sentinel Graph
+        DefaultPollPeriodSeconds: 30
+        Settings:
+          - Name: LookbackSeconds
+            Description: Number of seconds to lookback
+            Required: false
+            DefaultValue: 90
+        FetchSkill: PrivacyRiskAgent.GetPurviewLogsFromMSG
+        ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
+
+SkillGroups:
+  - Format: API
+    Settings:
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_1.yaml
+      OpenApiSpecURL: openapispec_1.yaml
+      EndpointUrlSettingName: PurviewEndpoint
+  - Format: KQL
+    Skills:
+      - Name: GetPurviewLogsFromMSG
+        DisplayName: Get 10 purview data logs results from Sentinel Graph
+        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Inputs:
+          - Name: LastTimeGenerated
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: "1900-01-01"
+            Required: false
+        Settings:
+          Target: SentinelGraph
+          Template: |-
+            UniquePurviewTable_SPRK
+            | where TimeGenerated > coalesce(todatetime("{{LastTimeGenerated}}"), datetime(1900-01-01))
+            | order by TimeGenerated asc
+            | take 5
+
+  - Format: KQL
+    Skills:
+      - Name: GetEntraUsersFromMSGByID
+        DisplayName: Get Entra user by ID from Sentinel Graph
+        Description: Querying the EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
+        Inputs:
+          - Name: UserID
+            Description: The ID of the Entra user to retrieve
+            Required: true
+        Settings:
+          Target: SentinelGraph
+          Template: |-
+            external_table("EntraUsers")
+            | where id == "{{UserID}}"
+            | summarize arg_max(TimeGenerated, *)
+  - Format: Agent
+    Skills:
+      - Name: PurviewLogSubmissionAgent
+        DisplayName: Purview Log Submission Agent
+        Description: The Purview Log Submission Agent retrieves Purview logs from Microsoft Security Graph and submits each item to the webhook for PII processing.
+        Inputs:
+          - Name: ExternalID
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: ""
+            Required: true
+          - Name: Id
+            Description: Unique identifier assigned externally for tracking the asset or data source
+            DefaultValue: ""
+            Required: true
+          - Name: ItOwner
+            Description: Name or identifier of the IT owner responsible for the asset
+            DefaultValue: ""
+            Required: false
+          - Name: SourceName
+            Description: Human-readable name of the source system or dataset
+            DefaultValue: ""
+            Required: true
+          - Name: SourceType
+            Description: Type of source (e.g., Azure SQL Database, Snowflake)
+            DefaultValue: ""
+            Required: true
+          - Name: SourceRegion
+            Description: Geographic or cloud region where the source is located
+            DefaultValue: ""
+            Required: true
+          - Name: AssetName
+            Description: Name of the specific asset being referenced
+            DefaultValue: ""
+            Required: true
+          - Name: AssetType
+            Description: Type of asset (e.g., table, document, storage bucket, endpoint)
+            DefaultValue: ""
+            Required: true
+          - Name: AssetPath
+            Description: Full path or URI to the asset within the source
+            DefaultValue: ""
+            Required: true
+          - Name: Classification
+            Description: High-level data classification
+            DefaultValue: ""
+            Required: true
+          - Name: ClassificationDetails
+            Description: Additional context about the classification, such as specific tags, labels, or sensitivity levels
+            DefaultValue: ""
+            Required: true
+        Interfaces:
+          - Agent
+        Settings:
+          Instructions: |
+            <role>
+            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the scanData webhook endpoint.
+            </role>
+
+            <instructions>
+            You will always perform the following tasks for each execution:
+
+            1. Data Enrichment:
+              With the log record:
+              a. Extract `AssetPath`.
+              b. Call `queryAssetByKeywords` child skill using the `AssetPath`.
+                  - If no asset is found, skip this and log an error with the AssetPath.
+              c. If asset is found:
+                  - Check the asset's `contact` array for contact information.
+                  - Extract `contact.id` with priority: Owner > Expert.
+                  - If no contact is found, use default email `notfound@ignore.this.com` to populate `ItOwner`.
+              d. If `contact.id` is a UUID:
+                  - DO NOT skip.
+                  - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
+                  - Populate `ItOwner` with the email.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default to `null` value.
+
+            2. Payload Preparation Instructions:
+              - Ensure Classification and ClassificationDetails remain unchanged.
+              - Wrap the resulting row payload inside a requestBody object.
+
+            3. Submission:
+              - Call `scanData` for the log record.
+              - POST the payload to the webhook endpoint.
+              - Ensure submission occurs even if default `ItOwner` is used.
+              - Log successful submission or any errors.
+
+            Example payload:
+            requestBody=
+            ```json
+            {
+              "ItOwner": "example@example.com"
+              "ExternalID": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+              "SourceName": "AzureSqlDatabase-Crl",
+              "SourceType": "Azure SQL Server",
+              "SourceRegion": "United States",
+              "AssetName": "CustomerFlights40",
+              "AssetType": "Table",
+              "AssetPath": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
+              "Classification": [
+                "MICROSOFT.PERSONAL.EMAIL",
+              ],
+              "ClassificationDetails": [
+                {
+                  "Name": "MICROSOFT.PERSONAL.EMAIL",
+                  "Confidence": 86,
+                  "Count": 1,
+                  "UniqueCount": 1
+                }
+              ]
+            }
+            ````
+
+            5. Logging & Error Handling:
+
+              * Log any rows skipped due to missing assets.
+              * Log errors encountered during the `scanData`.
+            </instructions>
+
+
+            <error handling>
+            ERROR HANDLING & VALIDATION GUIDELINES
+
+            Submission Errors:
+              - If webhook call fails, retry once.
+              - If still failing, log which ExternalID failed.
+
+            Data Validation:
+              - Ensure all required fields are present before submission.
+              - If a record is missing critical fields, skip and log the error.
+            </error handling>
+        ChildSkills:
+          - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
+          - scanData # submits the PII classification record to endpoint
+          - queryAssetByKeywords # calls purview search API to get asset by keywords

@@ -1,0 +1,14 @@
+jobName: onetrust_purviewlog_sentinel
+jobType: Notebook
+jobPath: onetrust_purviewlog_sentinel.ipynb
+jobDescription: ''
+scheduleConfig:
+  isDisabled: false
+  startTime: '2025-09-03T23:29:00.000+00:00'
+  endTime: '2030-01-06T00:29:00.000+00:00'
+  repeatFrequency: Hours
+  interval: 1
+inputTables: []
+outputTables: []
+runtimeArgs: []
+isDisabled: false

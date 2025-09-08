@@ -16,6 +16,13 @@ Descriptor:
       DefaultValue: "https://<example>.purview.azure.com"
       SettingType: String
       Required: true
+    - Name: OneTrustOrganizationUrl
+      Label: Onetrust API URL for Organizations
+      Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+      HintText: "https://example.onetrust.com"
+      DefaultValue: "https://<organization>.onetrust.com"
+      SettingType: String
+      Required: true
 
 AgentDefinitions:
   - Name: PrivacyRiskAgent
@@ -25,7 +32,6 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PrivacyRiskAgent
-      - OneTrustDDAPI
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger
@@ -43,8 +49,15 @@ AgentDefinitions:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/purview_api_skill_openapi.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_1.yaml
+      #OpenApiSpecURL: openapispec_1.yaml
       EndpointUrlSettingName: PurviewEndpoint
+  - Format: API
+    Settings:
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_2.yaml
+      #OpenApiSpecURL: openapispec_2.yaml
+      EndpointUrlSettingName: OneTrustOrganizationUrl
+
   - Format: KQL
     Skills:
       - Name: GetPurviewLogsFromMSG
