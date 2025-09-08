@@ -32,14 +32,18 @@ AgentDefinitions:
         DisplayName: PurviewLog Trigger
         Description: PurviewLog Classification Trigger to begin processing logs from Sentinel Graph
         DefaultPollPeriodSeconds: 30
+        Settings:
+          - Name: LookbackSeconds
+            Description: Number of seconds to lookback
+            Required: false
+            DefaultValue: 90
         FetchSkill: PrivacyRiskAgent.GetPurviewLogsFromMSG
         ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
 
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent-MultiManifest/PrivacyRiskAgent/openapispec_2.yaml
-      #OpenApiSpecURL: openapispec_2.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/purview_api_skill_openapi.yaml
       EndpointUrlSettingName: PurviewEndpoint
   - Format: KQL
     Skills:
@@ -148,7 +152,7 @@ SkillGroups:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default to `null` value.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
 
             2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.
