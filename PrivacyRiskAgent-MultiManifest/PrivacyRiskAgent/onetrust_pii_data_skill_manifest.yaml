@@ -20,6 +20,6 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_2.yaml
-      OpenApiSpecURL: openapispec_2.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent-MultiManifest/PrivacyRiskAgent/openapispec_1.yaml
+      #OpenApiSpecURL: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl

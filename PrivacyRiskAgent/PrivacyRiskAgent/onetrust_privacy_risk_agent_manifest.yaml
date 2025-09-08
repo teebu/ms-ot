@@ -38,24 +38,19 @@ AgentDefinitions:
         DisplayName: PurviewLog Trigger
         Description: PurviewLog Classification Trigger to begin processing logs from Sentinel Graph
         DefaultPollPeriodSeconds: 30
-        Settings:
-          - Name: LookbackSeconds
-            Description: Number of seconds to lookback
-            Required: false
-            DefaultValue: 90
         FetchSkill: PrivacyRiskAgent.GetPurviewLogsFromMSG
         ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
 
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_1.yaml
-      #OpenApiSpecURL: openapispec_1.yaml
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      OpenApiSpecURL: openapispec_2.yaml
       EndpointUrlSettingName: PurviewEndpoint
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/OneTrustPIIAgent/openapispec_2.yaml
-      #OpenApiSpecURL: openapispec_2.yaml
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
+      OpenApiSpecURL: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
   - Format: KQL
