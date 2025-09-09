@@ -44,13 +44,11 @@ AgentDefinitions:
 SkillGroups:
   - Format: API
     Settings:
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
-      OpenApiSpecURL: openapispec_2.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
       EndpointUrlSettingName: PurviewEndpoint
   - Format: API
     Settings:
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
-      OpenApiSpecURL: openapispec_1.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
   - Format: KQL
@@ -150,7 +148,7 @@ SkillGroups:
             1. Data Enrichment:
               With the log record:
               a. Extract `AssetPath`.
-              b. Call `queryAssetByKeywords` child skill using the `AssetPath`.
+              b. Call `queryAssetByKeywords` child skill passing the value of `AssetPath` to `keywords` and `limit=1` to find the corresponding asset in Purview.
                   - If no asset is found, skip this and log an error with the AssetPath.
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
@@ -160,7 +158,7 @@ SkillGroups:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default to `null` value.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
 
             2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.

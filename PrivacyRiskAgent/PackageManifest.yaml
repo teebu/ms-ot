@@ -1,7 +1,0 @@
-manifest:
-  - id: "PrivacyRiskAgent"
-    type: CopilotAgent
-  - id: "AnalyticsJobPurviewLog"
-    type: SentinelLake
-schema:
-  version: "1.0.0"
