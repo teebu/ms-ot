@@ -44,12 +44,17 @@ AgentDefinitions:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
-      EndpointUrlSettingName: PurviewEndpoint
+      # onetrust api
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      OpenApiSpecUrl: openapispec_1.yaml
+      EndpointUrlSettingName: OneTrustOrganizationUrl
+
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
-      EndpointUrlSettingName: OneTrustOrganizationUrl
+      # purview api
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
+      OpenApiSpecUrl: openapispec_2.yaml
+      EndpointUrlSettingName: PurviewEndpoint
 
   - Format: KQL
     Skills:

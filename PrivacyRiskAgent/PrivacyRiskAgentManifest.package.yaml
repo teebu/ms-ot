@@ -1,0 +1,7 @@
+yamlType: packageManifest
+packageName: PrivacyRiskAgent
+packageDescription: >-
+  Detects new instances of personal data and collects necessary regulatory
+  context for risk analysis review in OneTrust.
+includePaths:
+  - PrivacyRiskAgent
