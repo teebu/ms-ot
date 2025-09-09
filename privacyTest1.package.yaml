@@ -1,5 +1,0 @@
-yamlType: packageManifest
-packageName: Security Agent Test
-packageDescription: Security description
-includePaths:
-  - PrivacyRiskAgent\PrivacyRiskAgent

@@ -27,5 +27,5 @@ Descriptor:
 SkillGroups:
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/a4ed04cefb90b03b324bcb223c5b8baca56678db/OneTrustPIIAgent/purview_api_skill_openapi.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgentCurrent/PrivacyRiskAgent/purview_api_skill_openapi.yaml
       EndpointUrlSettingName: PurviewEndpoint
