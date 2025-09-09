@@ -1,4 +1,4 @@
-# Copilot Setup:
+# Copilot Setup (Multi Manifest):
 
 1. create onetrust data discovery api plugin
    -> setup endpoint and api (req: token from onetrust) credentials
