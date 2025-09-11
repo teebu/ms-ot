@@ -3,19 +3,15 @@ Descriptor:
   DisplayName: Privacy Risk Agent
   Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
   Icon: https://www.onetrust.com/favicon.svg
+  # OneTrust Auth Details
   SupportedAuthTypes:
-    - AADDelegated
+    - ApiKey
   Authorization:
-    Type: AADDelegated
-    EntraScopes: https://purview.azure.net/.default
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: "Bearer"
   Settings:
-    - Name: PurviewEndpoint
-      Label: Purview Endpoint
-      Description: The fully qualified host name for your Purview account.
-      HintText: "https://example.purview.azure.com"
-      DefaultValue: "https://<example>.purview.azure.com"
-      SettingType: String
-      Required: true
     - Name: OneTrustOrganizationUrl
       Label: Onetrust API URL for Organizations
       Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
@@ -23,6 +19,28 @@ Descriptor:
       DefaultValue: "https://<organization>.onetrust.com"
       SettingType: String
       Required: true
+
+  # Purview Auth Details
+  # SupportedAuthTypes:
+  #   - AADDelegated
+  # Authorization:
+  #   Type: AADDelegated
+  #   EntraScopes: https://purview.azure.net/.default
+  # Settings:
+  #   - Name: PurviewEndpoint
+  #     Label: Purview Endpoint
+  #     Description: The fully qualified host name for your Purview account.
+  #     HintText: "https://example.purview.azure.com"
+  #     DefaultValue: "https://<example>.purview.azure.com"
+  #     SettingType: String
+  #     Required: true
+  #   - Name: OneTrustOrganizationUrl
+  #     Label: Onetrust API URL for Organizations
+  #     Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+  #     HintText: "https://example.onetrust.com"
+  #     DefaultValue: "https://<organization>.onetrust.com"
+  #     SettingType: String
+  #     Required: true
 
 AgentDefinitions:
   - Name: PrivacyRiskAgent
@@ -42,19 +60,20 @@ AgentDefinitions:
         ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
 
 SkillGroups:
+  # onetrust api
   - Format: API
     Settings:
-      # onetrust api
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
-      OpenApiSpecUrl: openapispec_1.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      #OpenApiSpecUrl: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
-  - Format: API
-    Settings:
-      # purview api
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
-      OpenApiSpecUrl: openapispec_2.yaml
-      EndpointUrlSettingName: PurviewEndpoint
+  # purview api
+  # TODO: disable purview api for now to only have 1 api skill enabled
+  # - Format: API
+  #   Settings:
+  #     #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
+  #     OpenApiSpecUrl: openapispec_2.yaml
+  #     EndpointUrlSettingName: PurviewEndpoint
 
   - Format: KQL
     Skills:
@@ -105,7 +124,7 @@ SkillGroups:
             Required: true
           - Name: ItOwner
             Description: Name or identifier of the IT owner responsible for the asset
-            DefaultValue: ""
+            DefaultValue: "null"
             Required: false
           - Name: SourceName
             Description: Human-readable name of the source system or dataset
@@ -150,26 +169,12 @@ SkillGroups:
             <instructions>
             You will always perform the following tasks for each execution:
 
-            1. Data Enrichment:
-              With the log record:
-              a. Extract `AssetPath`.
-              b. Call `queryAssetByKeywords` child skill passing the value of `AssetPath` to `keywords` and `limit=1` to find the corresponding asset in Purview.
-                  - If no asset is found, skip this and log an error with the AssetPath.
-              c. If asset is found:
-                  - Check the asset's `contact` array for contact information.
-                  - Extract `contact.id` with priority: Owner > Expert.
-                  - If no contact is found, use default email `notfound@ignore.this.com` to populate `ItOwner`.
-              d. If `contact.id` is a UUID:
-                  - DO NOT skip.
-                  - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
-                  - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
-
-            2. Payload Preparation Instructions:
+            1. Payload Preparation Instructions:
+              - Populate `ItOwner` with the default value "null" if not provided.
               - Ensure Classification and ClassificationDetails remain unchanged.
               - Wrap the resulting row payload inside a requestBody object.
 
-            3. Submission:
+            2. Submission:
               - Call `scanData` for the log record.
               - POST the payload to the webhook endpoint.
               - Ensure submission occurs even if default `ItOwner` is used.
@@ -179,7 +184,7 @@ SkillGroups:
             requestBody=
             ```json
             {
-              "ItOwner": "example@example.com"
+              "ItOwner": null,
               "ExternalID": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
               "SourceName": "AzureSqlDatabase-Crl",
               "SourceType": "Azure SQL Server",
@@ -222,4 +227,5 @@ SkillGroups:
         ChildSkills:
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - scanData # submits the PII classification record to endpoint
-          - queryAssetByKeywords # calls purview search API to get asset by keywords
+          # TODO: disable purview for single manifest
+          # - queryAssetByKeywords  calls purview search API to get asset by keywords
