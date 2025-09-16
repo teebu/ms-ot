@@ -57,6 +57,7 @@ SkillGroups:
   - Format: API
     Settings:
       OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      # NOTE: when creating zip use file name
       #OpenApiSpecUrl: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
@@ -65,6 +66,7 @@ SkillGroups:
   # - Format: API
   #   Settings:
   #     #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
+  #     # NOTE: when creating zip use file name
   #     OpenApiSpecUrl: openapispec_2.yaml
   #     EndpointUrlSettingName: PurviewEndpoint
 
