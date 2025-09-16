@@ -52,7 +52,7 @@ SkillGroups:
             DefaultValue: "1900-01-01"
             Required: false
         Settings:
-          Target: SentinelGraph
+          Target: SentinelDataLake
           Template: |-
             UniquePurviewTable_SPRK
             | where TimeGenerated > coalesce(todatetime("{{LastTimeGenerated}}"), datetime(1900-01-01))

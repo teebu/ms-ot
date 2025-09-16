@@ -34,13 +34,6 @@ Descriptor:
   #     DefaultValue: "https://<example>.purview.azure.com"
   #     SettingType: String
   #     Required: true
-  #   - Name: OneTrustOrganizationUrl
-  #     Label: Onetrust API URL for Organizations
-  #     Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
-  #     HintText: "https://example.onetrust.com"
-  #     DefaultValue: "https://<organization>.onetrust.com"
-  #     SettingType: String
-  #     Required: true
 
 AgentDefinitions:
   - Name: PrivacyRiskAgent
@@ -86,7 +79,7 @@ SkillGroups:
             DefaultValue: "1900-01-01"
             Required: false
         Settings:
-          Target: SentinelGraph
+          Target: SentinelDataLake
           Template: |-
             UniquePurviewTable_SPRK
             | where TimeGenerated > coalesce(todatetime("{{LastTimeGenerated}}"), datetime(1900-01-01))
