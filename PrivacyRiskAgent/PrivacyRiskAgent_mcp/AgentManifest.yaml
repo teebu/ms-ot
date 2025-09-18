@@ -77,7 +77,7 @@ SkillGroups:
         Settings:
           Target: SentinelDataLake
           Template: |-
-            external_table("EntraUsers")
+            EntraUsers
             | where id == "{{UserID}}"
             | summarize arg_max(TimeGenerated, *)
 

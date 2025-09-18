@@ -98,11 +98,12 @@ SkillGroups:
             Description: The ID of the Entra user to retrieve
             Required: true
         Settings:
-          Target: SentinelGraph
+          Target: SentinelDataLake
           Template: |-
             external_table("EntraUsers")
             | where id == "{{UserID}}"
             | summarize arg_max(TimeGenerated, *)
+
   - Format: Agent
     Skills:
       - Name: PurviewLogSubmissionAgent
