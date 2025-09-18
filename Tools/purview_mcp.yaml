@@ -3,14 +3,13 @@ Descriptor:
   DisplayName: MCP Server for OneTrust
   Description: MCP Server for OneTrust Integration with Purview
   DescriptionForModel: MCP Server for OneTrust Integration with Purview
-
 Authorization:
   Type: AADDelegated
 
 SkillGroups:
   - Format: MCP
     Settings:
-      Endpoint: https://norwayeast.api.securityplatform.microsoft.com/mcp/custom/purview-test
+      Endpoint: https://api.securityplatform.microsoft.com/mcp/purview
       TokenScope: https://purview.azure.net/.default
       UseStreamableHttp: true
       UsePluginAuth: true

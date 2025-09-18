@@ -1,45 +1,51 @@
 Descriptor:
-  Name: PrivacyRiskAgent
-  DisplayName: Privacy Risk Agent
+  Name: PrivacyRiskAgentMCP
+  DisplayName: Privacy Risk Agent MCP
   Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
   Icon: https://www.onetrust.com/favicon.svg
+  # OneTrust Auth Details
   SupportedAuthTypes:
-    - AADDelegated
+    - ApiKey
   Authorization:
-    Type: AADDelegated
-    EntraScopes: https://purview.azure.net/.default
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: "Bearer"
   Settings:
-    - Name: PurviewEndpoint
-      Label: Purview Endpoint
-      Description: The fully qualified host name for your Purview account.
-      HintText: "https://example.purview.azure.com"
-      DefaultValue: "https://<example>.purview.azure.com"
+    - Name: OneTrustOrganizationUrl
+      Label: Onetrust API URL for Organizations
+      Description: The URL of the OneTrust API for accessing your Organization. Specify the name of your Organization.
+      HintText: "https://example.onetrust.com"
+      DefaultValue: "https://<organization>.onetrust.com"
       SettingType: String
       Required: true
 
 AgentDefinitions:
-  - Name: PrivacyRiskAgent
-    DisplayName: Privacy Risk Agent
+  - Name: PrivacyRiskAgentMCP
+    DisplayName: Privacy Risk Agent MCP
     Description: Detects new instances of personal data and collects necessary regulatory context for risk analysis review in OneTrust.
     Publisher: OneTrust
     Product: OneTrust
     RequiredSkillsets:
-      - PrivacyRiskAgent
-      - OneTrustDDAPI
+      - PrivacyRiskAgentMCP
+      - MCP Server for OneTrust
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger
         DisplayName: PurviewLog Trigger
         Description: PurviewLog Classification Trigger to begin processing logs from Sentinel Graph
         DefaultPollPeriodSeconds: 30
-        FetchSkill: PrivacyRiskAgent.GetPurviewLogsFromMSG
-        ProcessSkill: PrivacyRiskAgent.PurviewLogSubmissionAgent
+        FetchSkill: PrivacyRiskAgentMCP.GetPurviewLogsFromMSG
+        ProcessSkill: PrivacyRiskAgentMCP.PurviewLogSubmissionAgent
 
 SkillGroups:
+  # onetrust api
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgentCurrent/PrivacyRiskAgent/purview_api_skill_openapi.yaml
-      EndpointUrlSettingName: PurviewEndpoint
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      # NOTE: when creating zip use file name
+      #OpenApiSpecUrl: openapispec_1.yaml
+      EndpointUrlSettingName: OneTrustOrganizationUrl
 
   - Format: KQL
     Skills:
@@ -139,17 +145,17 @@ SkillGroups:
             1. Data Enrichment:
               With the log record:
               a. Extract `AssetPath`.
-              b. Call `queryAssetByKeywords` child skill passing the value of `AssetPath` to `keywords` and `limit=1` to find the corresponding asset in Purview.
+              b. Call `purview_search_asset` child skill passing the value of `AssetPath` to `assetPath` to find the corresponding asset in Purview.
                   - If no asset is found, skip this and log an error with the AssetPath.
               c. If asset is found:
                   - Check the asset's `contact` array for contact information.
                   - Extract `contact.id` with priority: Owner > Expert.
-                  - If no contact is found, use default email `notfound@ignore.this.com` to populate `ItOwner`.
+                  - If no contact is found, use default `null` to populate `ItOwner`.
               d. If `contact.id` is a UUID:
                   - DO NOT skip.
                   - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
                   - Populate `ItOwner` with the email.
-                  - If `contact.id` is missing, invalid, or email retrieval fails, remove `ItOwner` with default to `null` value.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default `null` value.
 
             2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.
@@ -193,7 +199,6 @@ SkillGroups:
               * Log errors encountered during the `scanData`.
             </instructions>
 
-
             <error handling>
             ERROR HANDLING & VALIDATION GUIDELINES
 
@@ -208,4 +213,4 @@ SkillGroups:
         ChildSkills:
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - scanData # submits the PII classification record to endpoint
-          - queryAssetByKeywords # calls purview search API to get asset by keywords
+          - purview_search_asset # MCP skill to call purview search API to get assets
