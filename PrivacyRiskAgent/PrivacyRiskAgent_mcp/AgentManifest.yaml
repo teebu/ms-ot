@@ -28,7 +28,7 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PrivacyRiskAgentMCP
-      - MCP Server for OneTrust
+      - QueryPurviewDataMap
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger

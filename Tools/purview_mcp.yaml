@@ -1,11 +1,11 @@
 Descriptor:
-  Name: MCP Server for OneTrust
-  DisplayName: MCP Server for OneTrust
-  Description: MCP Server for OneTrust Integration with Purview
-  DescriptionForModel: MCP Server for OneTrust Integration with Purview
+  Name: QueryPurviewDataMap
+  DisplayName: Query Purview Data Map
+  Description: Query the Purview data map to retrieve data asset information
+  DescriptionForDisplay: Query the Purview data map to retrieve data asset information
+  DescriptionForModel: Query the Purview data map to retrieve data asset information
 Authorization:
   Type: AADDelegated
-
 SkillGroups:
   - Format: MCP
     Settings:
@@ -13,3 +13,4 @@ SkillGroups:
       TokenScope: https://purview.azure.net/.default
       UseStreamableHttp: true
       UsePluginAuth: true
+      AllowedTools: purview_search_asset
