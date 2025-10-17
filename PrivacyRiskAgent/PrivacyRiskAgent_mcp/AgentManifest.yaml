@@ -28,8 +28,8 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PrivacyRiskAgentMCP
-      - QueryPurviewDataMap # custom mcp plugin using yaml
-      # - MCP.Sentinel.Purview # global mcp plugin
+      # - QueryPurviewDataMap # custom mcp plugin using yaml
+      - MCP.Sentinel.Purview # global mcp plugin
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger

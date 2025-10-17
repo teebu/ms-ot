@@ -20,21 +20,6 @@ Descriptor:
       SettingType: String
       Required: true
 
-  # Purview Auth Details
-  # SupportedAuthTypes:
-  #   - AADDelegated
-  # Authorization:
-  #   Type: AADDelegated
-  #   EntraScopes: https://purview.azure.net/.default
-  # Settings:
-  #   - Name: PurviewEndpoint
-  #     Label: Purview Endpoint
-  #     Description: The fully qualified host name for your Purview account.
-  #     HintText: "https://example.purview.azure.com"
-  #     DefaultValue: "https://<example>.purview.azure.com"
-  #     SettingType: String
-  #     Required: true
-
 AgentDefinitions:
   - Name: PrivacyRiskAgent
     DisplayName: Privacy Risk Agent
@@ -56,9 +41,9 @@ SkillGroups:
   # onetrust api
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
       # NOTE: when creating zip use file name
-      #OpenApiSpecUrl: openapispec_1.yaml
+      OpenApiSpecUrl: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
   # purview api
@@ -74,10 +59,10 @@ SkillGroups:
     Skills:
       - Name: GetPurviewLogsFromMSG
         DisplayName: Get 10 purview data logs results from Sentinel Graph
-        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Description: Querying Purview Data Sensitivy Logs table to gather 5 records from Sentinel Graph
         Inputs:
           - Name: LastTimeGenerated
-            Description: Unique identifier assigned externally for tracking the asset or data source
+            Description: Timestamp of the last processed log entry
             DefaultValue: "1900-01-01"
             Required: false
         Settings:
