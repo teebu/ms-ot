@@ -28,6 +28,7 @@ AgentDefinitions:
     Product: OneTrust
     RequiredSkillsets:
       - PrivacyRiskAgent
+      - MCP.Sentinel.Purview # global mcp plugin
     SingleInstance: false
     Triggers:
       - Name: PurviewLogTrigger
@@ -41,28 +42,19 @@ SkillGroups:
   # onetrust api
   - Format: API
     Settings:
-      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
       # NOTE: when creating zip use file name
-      OpenApiSpecUrl: openapispec_1.yaml
+      #OpenApiSpecUrl: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
-
-  # purview api
-  # TODO: disable purview api for now to only have 1 api skill enabled
-  # - Format: API
-  #   Settings:
-  #     #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_2.yaml
-  #     # NOTE: when creating zip use file name
-  #     OpenApiSpecUrl: openapispec_2.yaml
-  #     EndpointUrlSettingName: PurviewEndpoint
 
   - Format: KQL
     Skills:
       - Name: GetPurviewLogsFromMSG
         DisplayName: Get 10 purview data logs results from Sentinel Graph
-        Description: Querying Purview Data Sensitivy Logs table to gather 5 records from Sentinel Graph
+        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
         Inputs:
           - Name: LastTimeGenerated
-            Description: Timestamp of the last processed log entry
+            Description: Unique identifier assigned externally for tracking the asset or data source
             DefaultValue: "1900-01-01"
             Required: false
         Settings:
@@ -105,7 +97,7 @@ SkillGroups:
             Required: true
           - Name: ItOwner
             Description: Name or identifier of the IT owner responsible for the asset
-            DefaultValue: "null"
+            DefaultValue: ""
             Required: false
           - Name: SourceName
             Description: Human-readable name of the source system or dataset
@@ -150,12 +142,26 @@ SkillGroups:
             <instructions>
             You will always perform the following tasks for each execution:
 
-            1. Payload Preparation Instructions:
-              - Populate `ItOwner` with the default value "null" if not provided.
+            1. Data Enrichment:
+              With the log record:
+              a. Extract `AssetPath`.
+              b. Call `purview_search_asset` child skill passing the value of `AssetPath` to `assetPath` to find the corresponding asset in Purview.
+                  - If no asset is found, skip this and log an error with the AssetPath.
+              c. If asset is found:
+                  - Check the asset's `contact` array for contact information.
+                  - Extract `contact.id` with priority: Owner > Expert.
+                  - If no contact is found, use default `null` to populate `ItOwner`.
+              d. If `contact.id` is a UUID:
+                  - DO NOT skip.
+                  - Call `GetEntraUsersFromMSGByID` child skill with the `contact.id` value.
+                  - Populate `ItOwner` with the email.
+                  - If `contact.id` is missing, invalid, or email retrieval fails, set `ItOwner` with default `null` value.
+
+            2. Payload Preparation Instructions:
               - Ensure Classification and ClassificationDetails remain unchanged.
               - Wrap the resulting row payload inside a requestBody object.
 
-            2. Submission:
+            3. Submission:
               - Call `scanData` for the log record.
               - POST the payload to the webhook endpoint.
               - Ensure submission occurs even if default `ItOwner` is used.
@@ -165,7 +171,7 @@ SkillGroups:
             requestBody=
             ```json
             {
-              "ItOwner": null,
+              "ItOwner": "example@example.com"
               "ExternalID": "mssql://ecohackssqlsvr.database.windows.net/ecohacksSQL/dbo/new_customerdata",
               "SourceName": "AzureSqlDatabase-Crl",
               "SourceType": "Azure SQL Server",
@@ -193,7 +199,6 @@ SkillGroups:
               * Log errors encountered during the `scanData`.
             </instructions>
 
-
             <error handling>
             ERROR HANDLING & VALIDATION GUIDELINES
 
@@ -208,5 +213,4 @@ SkillGroups:
         ChildSkills:
           - GetEntraUsersFromMSGByID # calls EntraUsers table in Sentinel Graph to retrieve the latest record for a specific user ID
           - scanData # submits the PII classification record to endpoint
-          # TODO: disable purview for single manifest
-          # - queryAssetByKeywords  calls purview search API to get asset by keywords
+          - purview_search_asset # MCP skill to call purview search API to get assets
