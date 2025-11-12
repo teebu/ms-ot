@@ -42,16 +42,16 @@ SkillGroups:
   # onetrust api
   - Format: API
     Settings:
-      OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
+      #OpenApiSpecURL: https://raw.githubusercontent.com/teebu/ms-ot/refs/heads/main/PrivacyRiskAgent/PrivacyRiskAgent/openapispec_1.yaml
       # NOTE: when creating zip use file name
-      #OpenApiSpecUrl: openapispec_1.yaml
+      OpenApiSpecUrl: openapispec_1.yaml
       EndpointUrlSettingName: OneTrustOrganizationUrl
 
   - Format: KQL
     Skills:
       - Name: GetPurviewLogsFromMSG
         DisplayName: Get 10 purview data logs results from Sentinel Graph
-        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Description: Querying Purview Data Sensitivity Logs table to gather 10 records from Sentinel Graph
         Inputs:
           - Name: LastTimeGenerated
             Description: Unique identifier assigned externally for tracking the asset or data source
@@ -136,7 +136,7 @@ SkillGroups:
         Settings:
           Instructions: |
             <role>
-            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the scanData webhook endpoint.
+            You are a Purview log submission agent. Your job is to process a Purview log record and submit the record as-is to the scanData webhook endpoint.
             </role>
 
             <instructions>
