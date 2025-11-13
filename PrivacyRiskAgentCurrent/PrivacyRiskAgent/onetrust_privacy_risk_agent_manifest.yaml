@@ -45,7 +45,7 @@ SkillGroups:
     Skills:
       - Name: GetPurviewLogsFromMSG
         DisplayName: Get 10 purview data logs results from Sentinel Graph
-        Description: Querying Purview Data Sensitivy Logs table to gather 10 records from Sentinel Graph
+        Description: Querying Purview Data Sensitivity Logs table to gather 10 records from Sentinel Graph
         Inputs:
           - Name: LastTimeGenerated
             Description: Unique identifier assigned externally for tracking the asset or data source
@@ -130,7 +130,7 @@ SkillGroups:
         Settings:
           Instructions: |
             <role>
-            You are a Purview log submission agent. Your job is to process a Purview log record submit the record as-is to the scanData webhook endpoint.
+            You are a Purview log submission agent. Your job is to process a Purview log record and submit the record as-is to the scanData webhook endpoint.
             </role>
 
             <instructions>
