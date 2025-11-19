@@ -7,5 +7,4 @@
 
 # Notebook:
 
-1. deploy notebook
-   -> create cron job - with a generious end time
+1. deploys a notebook that creates a cron job
